@@ -1,0 +1,212 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class CapitalizationQuestion {
+  + CapitalizationQuestion(): 
+  - correctAnswer: String
+  - question: String
+  + validateAnswer(String): boolean
+  + questionExplanation(): String
+}
+class CompleteQuestion {
+  + CompleteQuestion(): 
+  - question: String
+  - relatedWord: String
+  - uncompleteWord: String
+  - answerToCompleteWord: String
+  + questionExplanation(): String
+  + validateAnswer(String): boolean
+}
+class EditController {
+  + EditController(): 
+  - editView: EditView
+  - saveLoad: SaveLoadQuizFile
+  + actionPerformed(ActionEvent): void
+}
+class EditView {
+  + EditView(EditController): 
+  - uncompleteWord: JTextField
+  - load: JButton
+  - loadQuestion: JComboBox
+  - newF: JButton
+  - exit: JButton
+  - inputAnswer: JTextField
+  - questionType: JComboBox
+  - relatedWord: JTextField
+  - controller: EditController
+  - save: JButton
+  - pictureURL: JTextField
+  + setAnswerInput(String): void
+  + setPictureURL(String): void
+  + getSelectedQuestionType(): String
+  + getPictureURL(): String
+  + setRelatedWord(String): void
+  + getAnswerInput(): String
+  + getUncompleteWord(): String
+  + getRelatedWord(): String
+  + setUncompleteWord(String): void
+}
+class GameController {
+  + GameController(): 
+  - gameView: GameView
+  - quizSet: QuizSet
+  + actionPerformed(ActionEvent): void
+}
+class GameView {
+  + GameView(): 
+  - exit: JButton
+  - timer: JLabel
+  - controller: GameController
+  - next: JButton
+  - uncompleteWord: JLabel
+  - inputAnswer: JTextField
+  - relatedWord: JLabel
+  - pictureURL: URL
+  + setRelatedWord(String): void
+  + setPictureURL(URL): void
+  + setTimer(int): void
+  + endGameTimeLimit(): void
+  + setUncompleteWord(String): void
+  + addHangmanWrong(): void
+  + paintComponent(Graphics): void
+  + getAnswerInput(): String
+}
+class MainMenuController {
+  + MainMenuController(): 
+  - quizController: QuizController
+  - mainMenuView: MainMenuView
+  - editController: EditController
+  - userInfo: UserInfo
+  - statisticsController: StatisticsController
+  - gameController: GameController
+  + actionPerformed(ActionEvent): void
+  + main(String[]): void
+}
+class MainMenuView {
+  + MainMenuView(MainMenuController): 
+  - controller: MainMenuController
+  - level: JLabel
+  - modeStatistics: JButton
+  - startGame: JButton
+  - startQuiz: JButton
+  - nextLevelUp: JLabel
+  - modeEdit: JButton
+  + setPercentToNextLevel(int): void
+  + setLevel(int): void
+}
+class PictureQuestion {
+  + PictureQuestion(): 
+  - correctAnswer: String
+  - imageURL: String
+  - question: String
+  + validateAnswer(String): boolean
+  + questionExplanation(): String
+}
+class QuizController {
+  + QuizController(): 
+  - quizView: QuizView
+  - quizSet: QuizSet
+  + actionPerformed(ActionEvent): void
+}
+class QuizQuestion {
+  + QuizQuestion(): 
+  + questionExplanation(): String
+  + validateAnswer(String): boolean
+}
+class QuizSet {
+  + QuizSet(): 
+  - quizQuestion: QuizQuestion
+  - setHistory: boolean[]
+  - quizSet: List<QuizQuestion>
+  - saveLoadQuizFile: SaveLoadQuizFile
+  + getRandomQuestionFromSet(): QuizQuestion
+  + getRandomQuestionFromFile(): QuizQuestion
+  + addHistoryEntry(boolean): void
+  + calculatePointsEarned(): int
+  - loadRandomQuestionSet(): List<QuizQuestion>?
+}
+class QuizView {
+  + QuizView(): 
+  - uncompleteWord: JLabel
+  - exit: JButton
+  - next: JButton
+  - relatedWord: JLabel
+  - pictureURL: URL
+  - inputAnswer: JTextField
+  - controller: QuizController
+  + getAnswerInput(): String
+  + setUncompleteWord(String): void
+  + setRelatedWord(String): void
+  + setPictureURL(URL): void
+}
+class SSharpQuestion {
+  + SSharpQuestion(): 
+  - question: String
+  - relatedWord: String
+  - correctAnswer: String
+  + validateAnswer(String): boolean
+  + questionExplanation(): String
+}
+class SaveLoadQuizFile {
+  + SaveLoadQuizFile(): 
+  - path: String
+  + loadQuestions(): List<QuizQuestion>
+  + saveQuestions(List<QuizQuestion>): void
+}
+class StatisticsController {
+  + StatisticsController(): 
+  - userInfo: UserInfo
+  - statisticsView: StatisticsView
+  + actionPerformed(ActionEvent): void
+}
+class StatisticsView {
+  + StatisticsView(StatisticsController): 
+  - controller: StatisticsController
+  - exit: JButton
+  + setAveragePointsPerChallange(int): void
+  + setSuccessRate(int): void
+  + setWinningStreak(int): void
+  + setTotalTimesFailed(int): void
+  + setTotalChallangeCount(int): void
+  + setMaxPointsForChallange(int): void
+}
+class UserInfo {
+  + UserInfo(): 
+  - totalPoints: int
+  + getLevel(): int
+  + addPoints(int): void
+  - loadUserInfo(): void
+  - saveUserInfo(): void
+  + percentToNextLevel(): int
+  + loadPointHistory(): int
+}
+
+CapitalizationQuestion  -[#000082,plain]-^  QuizQuestion           
+CompleteQuestion        -[#000082,plain]-^  QuizQuestion           
+EditController         "1" *-[#595959,plain]-> "editView\n1" EditView               
+EditController         "1" *-[#595959,plain]-> "saveLoad\n1" SaveLoadQuizFile       
+EditView               "1" *-[#595959,plain]-> "controller\n1" EditController         
+GameController         "1" *-[#595959,plain]-> "gameView\n1" GameView               
+GameController         "1" *-[#595959,plain]-> "quizSet\n1" QuizSet                
+GameView               "1" *-[#595959,plain]-> "controller\n1" GameController         
+MainMenuController     "1" *-[#595959,plain]-> "editController\n1" EditController         
+MainMenuController     "1" *-[#595959,plain]-> "gameController\n1" GameController         
+MainMenuController     "1" *-[#595959,plain]-> "mainMenuView\n1" MainMenuView           
+MainMenuController     "1" *-[#595959,plain]-> "quizController\n1" QuizController         
+MainMenuController     "1" *-[#595959,plain]-> "statisticsController\n1" StatisticsController   
+MainMenuController     "1" *-[#595959,plain]-> "userInfo\n1" UserInfo               
+MainMenuView           "1" *-[#595959,plain]-> "controller\n1" MainMenuController     
+PictureQuestion         -[#000082,plain]-^  QuizQuestion           
+QuizController         "1" *-[#595959,plain]-> "quizSet\n1" QuizSet                
+QuizController         "1" *-[#595959,plain]-> "quizView\n1" QuizView               
+QuizSet                "1" *-[#595959,plain]-> "quizQuestion\n1" QuizQuestion           
+QuizSet                "1" *-[#595959,plain]-> "saveLoadQuizFile\n1" SaveLoadQuizFile       
+QuizView               "1" *-[#595959,plain]-> "controller\n1" QuizController         
+SSharpQuestion          -[#000082,plain]-^  QuizQuestion           
+StatisticsController   "1" *-[#595959,plain]-> "statisticsView\n1" StatisticsView         
+StatisticsController   "1" *-[#595959,plain]-> "userInfo\n1" UserInfo               
+StatisticsView         "1" *-[#595959,plain]-> "controller\n1" StatisticsController   
+@enduml
