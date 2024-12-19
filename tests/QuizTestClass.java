@@ -7,7 +7,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class QuizTestClass {
-
     @Test
     void testCapitalizationQuestion() {
         CapitalizationQuestion question = new CapitalizationQuestion("TestAnswer");
@@ -32,4 +31,16 @@ public class QuizTestClass {
         assertFalse(question.validateAnswer("Dog"));
         assertEquals("Beschreiben Sie, was Sie auf dem Bild sehen. URL: http://example.com/image.jpg", question.questionExplanation());
     }
+
+    @Test
+    void testSSharpQuestion() {
+        SSharpQuestion question = new SSharpQuestion("gehen", "Gehen");
+        assertTrue(question.validateAnswer("gehen"));
+        assertTrue(question.validateAnswer("Gehen"));
+        assertFalse(question.validateAnswer("laufen"));
+        assertFalse(question.validateAnswer("Geh"));
+        assertEquals("Geben Sie die Infinitivform des Wortes ein: gehen", question.questionExplanation());
+        assertEquals("SSharpQuestion", question.getType());
+    }
+
 }
