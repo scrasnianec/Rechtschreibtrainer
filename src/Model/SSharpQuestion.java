@@ -20,4 +20,9 @@ public class SSharpQuestion extends QuizQuestion {
 	public String questionExplanation() {
 		return "Geben Sie die Infinitivform des Wortes ein: " + relatedWord;
 	}
+
+	@Override
+	public String getType() {
+		return "SSharpQuestion";
+	}
 }

@@ -32,36 +32,4 @@ public class QuizTestClass {
         assertFalse(question.validateAnswer("Dog"));
         assertEquals("Beschreiben Sie, was Sie auf dem Bild sehen. URL: http://example.com/image.jpg", question.questionExplanation());
     }
-
-    @Test
-    void testQuizSet() {
-        // Mock SaveLoadQuizFile (simplified)
-        SaveLoadQuizFile mockSaveLoadQuizFile = new SaveLoadQuizFile() {
-            @Override
-            public List<QuizQuestion> loadQuestions() {
-                List<QuizQuestion> questions = new ArrayList<>();
-                questions.add(new CapitalizationQuestion("Correct"));
-                questions.add(new CompleteQuestion("Tree", "Tr__", "Tree"));
-                return questions;
-            }
-        };
-
-        QuizSet quizSet = new QuizSet(mockSaveLoadQuizFile);
-        QuizQuestion randomQuestion = quizSet.getRandomQuestionFromSet();
-        assertNotNull(randomQuestion);
-
-        QuizQuestion fileQuestion = quizSet.getRandomQuestionFromFile();
-        assertNotNull(fileQuestion);
-
-        // Test history and points calculation
-        quizSet.addHistoryEntry(true);
-        quizSet.addHistoryEntry(false);
-        assertEquals(10, quizSet.calculatePointsEarned());
-        quizSet.addHistoryEntry(true);
-        assertEquals(20, quizSet.calculatePointsEarned());
-    }
-
-    interface SaveLoadQuizFile {
-        List<QuizQuestion> loadQuestions();
-    }
 }

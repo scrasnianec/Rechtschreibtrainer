@@ -20,4 +20,9 @@ public class PictureQuestion extends QuizQuestion {
 	public String questionExplanation() {
 		return "Beschreiben Sie, was Sie auf dem Bild sehen. URL: " + imageURL;
 	}
+
+	@Override
+	public String getType() {
+		return "PictureQuestion";
+	}
 }

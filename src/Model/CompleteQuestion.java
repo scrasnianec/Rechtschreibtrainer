@@ -22,4 +22,9 @@ public class CompleteQuestion extends QuizQuestion {
 	public String questionExplanation() {
 		return "Ergänzen Sie das unvollständige Wort korrekt, basierend auf das verwandte Wort: " + relatedWord;
 	}
+
+	@Override
+	public String getType() {
+		return "CompleteQuestion";
+	}
 }

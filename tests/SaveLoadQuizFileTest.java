@@ -1,6 +1,8 @@
-package Model;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import Model.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 class SaveLoadQuizFileTest {
 
     private SaveLoadQuizFile saveLoadQuizFile;
-    private String testFilePath = "test_questions.json"; // Temporary file for testing
+    private String testFilePath = "data/test_questions.json"; // Temporary file for testing
 
     @BeforeEach
     void setUp() {
@@ -22,14 +24,20 @@ class SaveLoadQuizFileTest {
         // Prepare sample data
         List<QuizQuestion> questions = new ArrayList<>();
         questions.add(new CapitalizationQuestion("Correct Answer"));
+        questions.add(new CompleteQuestion("hören", "geh__", "Gehör"));
+        questions.add(new PictureQuestion("http://example.com/image.jpg", "Katze"));
+        questions.add(new SSharpQuestion("essen", "aß"));
         saveLoadQuizFile.saveQuestions(questions);
 
         // Test loading the questions
         List<QuizQuestion> loadedQuestions = saveLoadQuizFile.loadQuestions();
 
         assertNotNull(loadedQuestions, "Questions should not be null");
-        assertEquals(1, loadedQuestions.size(), "There should be one question loaded");
+        assertEquals(4, loadedQuestions.size(), "There should be four questions loaded");
         assertTrue(loadedQuestions.get(0) instanceof CapitalizationQuestion, "Loaded question should be of type CapitalizationQuestion");
+        assertTrue(loadedQuestions.get(1) instanceof CompleteQuestion, "Loaded question should be of type CompleteQuestion");
+        assertTrue(loadedQuestions.get(2) instanceof PictureQuestion, "Loaded question should be of type PictureQuestion");
+        assertTrue(loadedQuestions.get(3) instanceof SSharpQuestion, "Loaded question should be of type SSharpQuestion");
     }
 
     @Test
@@ -70,7 +78,7 @@ class SaveLoadQuizFileTest {
         assertTrue(loadedQuestions.isEmpty(), "The list should be empty");
     }
 
-    @Test
+    @AfterEach
     void testFileDeletionAfterTest() {
         // Clean up test file after running tests
         File file = new File(testFilePath);

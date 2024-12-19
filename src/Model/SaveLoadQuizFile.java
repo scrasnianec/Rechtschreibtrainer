@@ -3,7 +3,6 @@ package Model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +15,10 @@ public class SaveLoadQuizFile {
 
 	public SaveLoadQuizFile(String path) {
 		this.path = path;
-		this.gson = new GsonBuilder().setPrettyPrinting().create();
+		this.gson = new GsonBuilder()
+				.registerTypeAdapter(QuizQuestion.class, new QuizQuestionDeserializer())
+				.setPrettyPrinting()
+				.create();
 	}
 
 	public List<QuizQuestion> loadQuestions() {

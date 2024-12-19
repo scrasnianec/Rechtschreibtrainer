@@ -18,4 +18,9 @@ public class CapitalizationQuestion extends QuizQuestion {
 	public String questionExplanation() {
 		return "Stellen Sie sicher, dass Ihre Antwort die gleiche Groß- und Kleinschreibung wie das Original hat.";
 	}
+
+	@Override
+	public String getType() {
+		return "CapitalizationQuestion";
+	}
 }
