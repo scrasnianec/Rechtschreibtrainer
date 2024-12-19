@@ -21,11 +21,6 @@ public class QuizSet {
 		return quizSet.get(new Random().nextInt(quizSet.size()));
 	}
 
-	public QuizQuestion getRandomQuestionFromFile() {
-		List<QuizQuestion> questions = saveLoadQuizFile.loadQuestions();
-		return questions.get(new Random().nextInt(questions.size()));
-	}
-
 	public void addHistoryEntry(boolean entry) {
 		// Example assumes fixed size history array
 		for (int i = setHistory.length - 1; i > 0; i--) {
@@ -37,7 +32,7 @@ public class QuizSet {
 	public int calculatePointsEarned() {
 		int points = 0;
 		for (boolean entry : setHistory) {
-			if (entry) points += 10;
+			if (entry) points += 1;
 		}
 		return points;
 	}
