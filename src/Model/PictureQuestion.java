@@ -1,5 +1,7 @@
 package Model;
 
+import java.net.URL;
+
 public class PictureQuestion extends QuizQuestion {
 
 	private static final String question = "Was ist in diesem Bild zu sehen? (Beachte die Rechtschreibung)";
@@ -24,5 +26,13 @@ public class PictureQuestion extends QuizQuestion {
 	@Override
 	public String getType() {
 		return "PictureQuestion";
+	}
+
+    public String getAnswer() {
+		return correctAnswer;
+    }
+
+	public URL getImageURL() {
+		return getClass().getResource(imageURL);
 	}
 }

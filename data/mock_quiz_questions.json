@@ -1,0 +1,63 @@
+[
+  {
+    "correctAnswer": "Das Wetter ist heute schön."
+  },
+  {
+    "correctAnswer": "Java ist eine objektorientierte Programmiersprache."
+  },
+  {
+    "correctAnswer": "Die Hauptstadt von Deutschland ist Berlin."
+  },
+  {
+    "relatedWord": "Auto",
+    "uncompleteWord": "A___",
+    "answerToCompleteWord": "Auto"
+  },
+  {
+    "relatedWord": "Baum",
+    "uncompleteWord": "B__m",
+    "answerToCompleteWord": "Baum"
+  },
+  {
+    "relatedWord": "Hund",
+    "uncompleteWord": "H__d",
+    "answerToCompleteWord": "Hund"
+  },
+  {
+    "relatedWord": "Blume",
+    "uncompleteWord": "Blu__",
+    "answerToCompleteWord": "Blume"
+  },
+  {
+    "imageURL": "https://example.com/image2.jpg",
+    "correctAnswer": "Hund"
+  },
+  {
+    "imageURL": "https://example.com/image3.jpg",
+    "correctAnswer": "Berg"
+  },
+  {
+    "imageURL": "https://example.com/image4.jpg",
+    "correctAnswer": "Strand"
+  },
+  {
+    "imageURL": "https://example.com/image5.jpg",
+    "correctAnswer": "Sonne"
+  },
+  {
+    "relatedWord": "spielen",
+    "correctAnswer": "spielen"
+  },
+  {
+    "relatedWord": "sehen",
+    "correctAnswer": "sehen"
+  },
+  {
+    "relatedWord": "fahren",
+    "correctAnswer": "fahren"
+  },
+  {
+    "relatedWord": "essen",
+    "correctAnswer": "essen"
+  }
+]
