@@ -6,7 +6,6 @@ import java.util.List;
 public class MockQuizFileCreator {
 
     public static void main(String[] args) {
-        final String url = "https://loremflickr.com/320/240";
         // Pfad zur Mock-Datei
         String mockFilePath = "./data/mock_quiz_questions.json";
 
@@ -26,15 +25,15 @@ public class MockQuizFileCreator {
         mockQuestions.add(new CompleteQuestion("Hund", "H__d", "Hund"));
         mockQuestions.add(new CompleteQuestion("Blume", "Blu__", "Blume"));
 
-        mockQuestions.add(new PictureQuestion(url, "Hund"));
-        mockQuestions.add(new PictureQuestion(url, "Berg"));
-        mockQuestions.add(new PictureQuestion(url, "Strand"));
-        mockQuestions.add(new PictureQuestion(url, "Sonne"));
+        mockQuestions.add(new PictureQuestion("https://as2.ftcdn.net/v2/jpg/02/71/09/23/1000_F_271092321_KWzz3JmciFYtzJRyTJE5ZMKSu4p1ATrK.jpg", "Hund"));
+        mockQuestions.add(new PictureQuestion("https://thumbs.dreamstime.com/b/mountain-10204465.jpg", "Berg"));
+        mockQuestions.add(new PictureQuestion("https://t3.ftcdn.net/jpg/02/43/25/90/360_F_243259090_crbVsAqKF3PC2jk2eKiUwZHBPH8Q6y9Y.jpg", "Strand"));
+        mockQuestions.add(new PictureQuestion("https://www.shutterstock.com/image-vector/sun-icon-symbol-isolated-on-600nw-1915412905.jpg", "Sonne"));
 
-        mockQuestions.add(new SSharpQuestion("spielen", "spielen"));
-        mockQuestions.add(new SSharpQuestion("sehen", "sehen"));
-        mockQuestions.add(new SSharpQuestion("fahren", "fahren"));
-        mockQuestions.add(new SSharpQuestion("essen", "essen"));
+        mockQuestions.add(new SSharpQuestion("biss", "beißen"));
+        mockQuestions.add(new SSharpQuestion("fasste", "fassen"));
+        mockQuestions.add(new SSharpQuestion("ließ", "lassen"));
+        mockQuestions.add(new SSharpQuestion("gepresst", "pressen"));
 
         saveLoadQuizFile.saveQuestions(mockQuestions);
 
