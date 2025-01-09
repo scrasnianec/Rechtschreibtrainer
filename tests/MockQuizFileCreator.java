@@ -6,6 +6,7 @@ import java.util.List;
 public class MockQuizFileCreator {
 
     public static void main(String[] args) {
+        final String url = "https://loremflickr.com/320/240";
         // Pfad zur Mock-Datei
         String mockFilePath = "./data/mock_quiz_questions.json";
 
@@ -25,10 +26,10 @@ public class MockQuizFileCreator {
         mockQuestions.add(new CompleteQuestion("Hund", "H__d", "Hund"));
         mockQuestions.add(new CompleteQuestion("Blume", "Blu__", "Blume"));
 
-        mockQuestions.add(new PictureQuestion("https://example.com/image2.jpg", "Hund"));
-        mockQuestions.add(new PictureQuestion("https://example.com/image3.jpg", "Berg"));
-        mockQuestions.add(new PictureQuestion("https://example.com/image4.jpg", "Strand"));
-        mockQuestions.add(new PictureQuestion("https://example.com/image5.jpg", "Sonne"));
+        mockQuestions.add(new PictureQuestion(url, "Hund"));
+        mockQuestions.add(new PictureQuestion(url, "Berg"));
+        mockQuestions.add(new PictureQuestion(url, "Strand"));
+        mockQuestions.add(new PictureQuestion(url, "Sonne"));
 
         mockQuestions.add(new SSharpQuestion("spielen", "spielen"));
         mockQuestions.add(new SSharpQuestion("sehen", "sehen"));
