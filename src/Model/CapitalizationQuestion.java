@@ -27,4 +27,8 @@ public class CapitalizationQuestion extends QuizQuestion {
 	public String getUncompleteWord() {
 		return correctAnswer;
 	}
+
+	public String getRelatedWord() {
+		return correctAnswer;
+	}
 }

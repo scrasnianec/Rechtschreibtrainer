@@ -63,24 +63,23 @@ public class QuizController implements ActionListener {
 			if (currentQuestion instanceof CompleteQuestion) {
 				CompleteQuestion completeQuestion = (CompleteQuestion) currentQuestion;
 				quizView.setRelatedWord(completeQuestion.getRelatedWord());
-				quizView.setUncompleteWord(completeQuestion.getUncompleteWord());
 			} else if (currentQuestion instanceof PictureQuestion) {
 				PictureQuestion pictureQuestion = (PictureQuestion) currentQuestion;
-				quizView.setUncompleteWord(pictureQuestion.getAnswer());
 				quizView.setPictureURL(pictureQuestion.getImageURL());
 			} else if (currentQuestion instanceof SSharpQuestion) {
 				SSharpQuestion sSharpQuestion = (SSharpQuestion) currentQuestion;
 				quizView.setRelatedWord(sSharpQuestion.getRelatedWord());
-				quizView.setUncompleteWord(sSharpQuestion.getAnswer());
 			} else if (currentQuestion instanceof CapitalizationQuestion) {
 				CapitalizationQuestion capitalizationQuestion = (CapitalizationQuestion) currentQuestion;
-				quizView.setUncompleteWord(capitalizationQuestion.getUncompleteWord());
+				quizView.setRelatedWord(capitalizationQuestion.getRelatedWord().toLowerCase());
 			} else {
 				// Handle unexpected question type
 				System.err.println("Unsupported question type: " + currentQuestion.getClass().getSimpleName());
 			}
+			quizView.setQuestion(currentQuestion.questionExplanation());
 		} else {
 			// Handle case when no more questions are available
+			quizView.getNextButton().setEnabled(false);
 			System.out.println("Quiz finished!");
 			quizView.setRelatedWord("Quiz Complete!");
 			quizView.setUncompleteWord("");

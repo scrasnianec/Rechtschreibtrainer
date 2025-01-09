@@ -32,7 +32,7 @@ public class PictureQuestion extends QuizQuestion {
 		return correctAnswer;
     }
 
-	public URL getImageURL() {
-		return getClass().getResource(imageURL);
+	public String getImageURL() {
+		return imageURL;
 	}
 }
