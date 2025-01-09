@@ -23,4 +23,8 @@ public class CapitalizationQuestion extends QuizQuestion {
 	public String getType() {
 		return "CapitalizationQuestion";
 	}
+
+	public String getUncompleteWord() {
+		return correctAnswer;
+	}
 }

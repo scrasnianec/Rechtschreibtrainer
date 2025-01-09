@@ -25,4 +25,12 @@ public class SSharpQuestion extends QuizQuestion {
 	public String getType() {
 		return "SSharpQuestion";
 	}
+
+    public String getRelatedWord() {
+		return relatedWord;
+    }
+
+	public String getAnswer() {
+		return correctAnswer;
+	}
 }

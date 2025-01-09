@@ -27,4 +27,12 @@ public class CompleteQuestion extends QuizQuestion {
 	public String getType() {
 		return "CompleteQuestion";
 	}
+
+	public String getRelatedWord() {
+		return relatedWord;
+	}
+
+	public String getUncompleteWord() {
+		return uncompleteWord;
+	}
 }

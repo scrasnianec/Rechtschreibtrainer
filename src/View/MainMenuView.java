@@ -1,13 +1,12 @@
 package View;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import Controller.MainMenuController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MainMenuView extends JFrame {
+public class MainMenuView extends JPanel {
 
 	private MainMenuController controller;
 
@@ -19,10 +18,8 @@ public class MainMenuView extends JFrame {
 	private JLabel nextLevelUpLabel;
 
 	public MainMenuView() {
-		setTitle("Rechtschreib-Trainer - Hauptmenü");
+		FlatDarkLaf.setup();
 		setSize(500, 400);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
 		initializeComponents();
 		layoutComponents();
 		setVisible(true);
@@ -39,6 +36,12 @@ public class MainMenuView extends JFrame {
 
 		nextLevelUpLabel = new JLabel("Fortschritt zum nächsten Level: 0%", SwingConstants.CENTER);
 		nextLevelUpLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		// Style buttons
+		styleButton(startQuiz);
+		styleButton(startGame);
+		styleButton(modeEdit);
+		styleButton(modeStatistics);
 	}
 
 	private void layoutComponents() {
@@ -62,6 +65,15 @@ public class MainMenuView extends JFrame {
 
 		add(levelPanel, BorderLayout.NORTH);
 		add(buttonPanel, BorderLayout.CENTER);
+	}
+
+	private void styleButton(JButton button) {
+		button.setFont(new Font("Arial", Font.BOLD, 14));
+		button.setFocusPainted(false);
+		button.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.GRAY, 1),
+				BorderFactory.createEmptyBorder(5, 15, 5, 15)
+		));
 	}
 
 	public void setLevel(int level) {
