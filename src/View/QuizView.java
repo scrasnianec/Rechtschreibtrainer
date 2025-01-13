@@ -85,6 +85,10 @@ public class QuizView extends JPanel {
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
+
+		// Initially hide the picture and loading label
+		picture.setVisible(false);
+		loadingLabel.setVisible(false);
 	}
 
 	public String getAnswerInput() {
@@ -93,79 +97,79 @@ public class QuizView extends JPanel {
 
 	/**
 	 * Asynchronously loads and sets an image from the provided URL.
+	 * If the URL is null, hides the picture component.
 	 *
 	 * @param url The URL of the image to load.
 	 */
 	public void setPictureURL(String url) {
-		// add that space for picture is only used when picture question is asked
+		// Hide picture and loading label if no URL is provided
+		if (url == null || url.isEmpty()) {
+			picture.setVisible(false);
+			loadingLabel.setVisible(false);
+			return;
+		}
 
 		// Clear any existing image
 		picture.setIcon(null);
 		loadingLabel.setVisible(false);
 		originalImage = null; // Reset original image
 
-		if (url != null) {
-			System.out.println("Loading image from URL: " + url);
-			if (imageCache.containsKey(url)) {
-				// Use cached image
-				picture.setIcon(imageCache.get(url));
-				return;
+		picture.setVisible(true); // Show picture space if URL is provided
+		loadingLabel.setVisible(true); // Show loading indicator
+
+		if (imageCache.containsKey(url)) {
+			// Use cached image
+			picture.setIcon(imageCache.get(url));
+			loadingLabel.setVisible(false);
+			return;
+		}
+
+		// Use SwingWorker to load the image in the background
+		new SwingWorker<BufferedImage, Void>() {
+			@Override
+			protected BufferedImage doInBackground() throws Exception {
+				try {
+					// Read the image from the URL
+					return ImageIO.read(new URL(url));
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw e;
+				}
 			}
 
-			// Show loading indicator
-			loadingLabel.setVisible(true);
-			picture.setText(""); // Clear any existing text
-
-			// Use SwingWorker to load the image in the background
-			new SwingWorker<BufferedImage, Void>() {
-				@Override
-				protected BufferedImage doInBackground() throws Exception {
-					try {
-						// Read the image from the URL
-						return ImageIO.read(new URL(url));
-					} catch (Exception e) {
-						e.printStackTrace();
-						throw e;
-					}
-				}
-
-				@Override
-				protected void done() {
-					try {
-						originalImage = get();
-						if (originalImage != null) {
-							// Scale the image to fit the label while maintaining aspect ratio
-							Image scaledImage = getScaledImage(originalImage, picture.getWidth(), picture.getHeight());
-							ImageIcon imageIcon = new ImageIcon(scaledImage);
-							picture.setIcon(imageIcon);
-							// Cache the loaded image
-							imageCache.put(new URL(url), imageIcon);
-						} else {
-							picture.setText("Image not available.");
-						}
-					} catch (Exception e) {
-						System.err.println("Error loading image: " + e.getMessage());
-						picture.setText("Failed to load image.");
-					} finally {
-						loadingLabel.setVisible(false);
-					}
-				}
-			}.execute();
-
-			// Add a component listener to handle resizing
-			picture.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
+			@Override
+			protected void done() {
+				try {
+					originalImage = get();
 					if (originalImage != null) {
+						// Scale the image to fit the label while maintaining aspect ratio
 						Image scaledImage = getScaledImage(originalImage, picture.getWidth(), picture.getHeight());
-						picture.setIcon(new ImageIcon(scaledImage));
+						ImageIcon imageIcon = new ImageIcon(scaledImage);
+						picture.setIcon(imageIcon);
+						// Cache the loaded image
+						imageCache.put(new URL(url), imageIcon);
+					} else {
+						picture.setText("Image not available.");
 					}
+				} catch (Exception e) {
+					System.err.println("Error loading image: " + e.getMessage());
+					picture.setText("Failed to load image.");
+				} finally {
+					loadingLabel.setVisible(false);
 				}
-			});
-		} else {
-			picture.setIcon(null); // Clear the icon if the URL is null
-			System.err.println("URL is null.");
-		}
+			}
+		}.execute();
+
+		// Add a component listener to handle resizing
+		picture.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				if (originalImage != null) {
+					Image scaledImage = getScaledImage(originalImage, picture.getWidth(), picture.getHeight());
+					picture.setIcon(new ImageIcon(scaledImage));
+				}
+			}
+		});
 	}
 
 	/**
@@ -194,9 +198,71 @@ public class QuizView extends JPanel {
 		return srcImg.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 	}
 
-	public void setQuestion(String questionText) {
+	public void setOnlyQuestion(String questionText) {
+		// Set the question text
 		question.setText(questionText);
+
+		// Update layout for only question display
+		removeAll(); // Clear existing components
+
+		// Add question to the center of the BorderLayout
+		JPanel centerPanel = new JPanel(new GridBagLayout());
+		centerPanel.add(question); // Center the question
+
+		// Add input and buttons at the bottom
+		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
+		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+		buttonPanel.add(next);
+		buttonPanel.add(exit);
+		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		// Re-add panels to the layout
+		add(centerPanel, BorderLayout.CENTER);
+		add(bottomPanel, BorderLayout.SOUTH);
+
+		// Refresh UI
+		revalidate();
+		repaint();
 	}
+
+	public void setPictureQuestion(String questionText, String imageURL) {
+		// Set the question text
+		question.setText(questionText);
+
+		// Update layout for question and picture
+		removeAll(); // Clear existing components
+
+		JPanel topPanel = new JPanel(new FlowLayout());
+		topPanel.add(question); // Question at the top
+
+		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
+		centerPanel.add(picture, BorderLayout.CENTER);
+		centerPanel.add(loadingLabel, BorderLayout.SOUTH); // Add loading label below picture
+
+		// Set picture from URL
+		setPictureURL(imageURL);
+
+		// Add input and buttons at the bottom
+		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
+		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+		buttonPanel.add(next);
+		buttonPanel.add(exit);
+		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		// Re-add panels to the layout
+		add(topPanel, BorderLayout.NORTH);
+		add(centerPanel, BorderLayout.CENTER);
+		add(bottomPanel, BorderLayout.SOUTH);
+
+		// Refresh UI
+		revalidate();
+		repaint();
+	}
+
 
 	public JButton getExitButton() {
 		return exit;
@@ -206,7 +272,7 @@ public class QuizView extends JPanel {
 		return next;
 	}
 
-	public JTextField getInputAnswerField() { // Changed return type to JTextField
+	public JTextField getInputAnswerField() {
 		return inputAnswer;
 	}
 

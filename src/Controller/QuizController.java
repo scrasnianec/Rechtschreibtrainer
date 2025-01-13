@@ -3,7 +3,6 @@ package Controller;
 import Model.PictureQuestion;
 import View.QuizView;
 import Model.QuizSet;
-import Model.*;
 import Model.QuizQuestion;
 
 import java.awt.event.ActionEvent;
@@ -59,12 +58,12 @@ public class QuizController implements ActionListener {
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
 		resetQuizView(); // Clear the view to avoid stale data from previous questions
-
 		if (currentQuestion != null) {
-			quizView.setQuestion(currentQuestion.questionExplanation());
 			if (currentQuestion instanceof PictureQuestion) {
 				PictureQuestion pictureQuestion = (PictureQuestion) currentQuestion;
-				quizView.setPictureURL(pictureQuestion.getImageURL());
+				quizView.setPictureQuestion(currentQuestion.questionExplanation(), pictureQuestion.getImageURL());
+			} else {
+				quizView.setOnlyQuestion(currentQuestion.questionExplanation());
 			}
 		} else {
 			// Handle case when no more questions are available
@@ -79,8 +78,7 @@ public class QuizController implements ActionListener {
 	 */
 	private void resetQuizView() {
 		quizView.clearInput();
-		// ts pmo ong dis cooked weil dings ähm bild geht nicht weg wenn dings es nächste dings is
-		// quizView.setPictureURL(null);
+		quizView.setPictureURL(null);
 	}
 
 	public QuizView getView() {
