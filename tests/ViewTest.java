@@ -1,5 +1,6 @@
 import Model.QuizSet;
 import Model.SaveLoadQuizFile;
+import Model.UserInfo;
 import org.junit.jupiter.api.Test;
 import View.*;
 import Controller.*;
@@ -8,11 +9,15 @@ class ViewTest {
     public static void main(String[] args) {
         // Create the view
         Frame view = new Frame();
-        QuizController quizController = new QuizController(new QuizSet(new SaveLoadQuizFile("data/mock_quiz_questions.json")));
-        view.add(quizController.getView());
+        view.setSize(800, 600);
 
-        // Set the view visible
-        view.setVisible(true);
+        // Initialize the application
+        UserInfo userInfo = new UserInfo();
+        StatisticsView statisticsView = new StatisticsView();
+
+        SaveLoadQuizFile save = new SaveLoadQuizFile("data/mock_quiz_questions.json");
+        MainMenuView mainMenuView = new MainMenuView();
+        MainMenuController mainMenuController = new MainMenuController(view);
 
     }
 }

@@ -40,6 +40,9 @@ public class GameView extends JPanel {
 		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.GRAY, 1),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		exit.setActionCommand("EXIT");
+		next.setActionCommand("NEXT");
 	}
 
 	private void layoutComponents() {

@@ -67,6 +67,11 @@ public class EditView extends JPanel {
 		pictureURL.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.GRAY, 1),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		exit.setActionCommand("EXIT");
+		save.setActionCommand("SAVE");
+		newF.setActionCommand("NEW");
+		load.setActionCommand("LOAD");
 	}
 
 	private void layoutComponents() {

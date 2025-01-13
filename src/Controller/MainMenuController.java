@@ -1,8 +1,11 @@
 package Controller;
 
-import View.MainMenuView;
+import Model.QuizSet;
+import Model.SaveLoadQuizFile;
+import View.*;
 import Model.UserInfo;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,18 +17,30 @@ public class MainMenuController implements ActionListener {
 	private QuizController quizController;
 	private GameController gameController;
 	private UserInfo userInfo;
+	SaveLoadQuizFile save;
 
-	public MainMenuController(MainMenuView mainMenuView, UserInfo userInfo,
-							  StatisticsController statisticsController,
-							  EditController editController,
-							  QuizController quizController,
-							  GameController gameController) {
-		this.mainMenuView = mainMenuView;
-		this.userInfo = userInfo;
-		this.statisticsController = statisticsController;
-		this.editController = editController;
-		this.quizController = quizController;
-		this.gameController = gameController;
+	public Frame frame;
+
+	public MainMenuController(Frame frame) {
+		this.frame = frame;
+
+		userInfo = new UserInfo();
+		save = new SaveLoadQuizFile("data/mock_quiz_questions.json");
+		mainMenuView = new MainMenuView();
+		statisticsController = new StatisticsController(userInfo, this);
+		editController = new EditController(new EditView(), save, this);
+		quizController = new QuizController(new QuizSet(save), this);
+		gameController = new GameController(new GameView(), new QuizSet(save), this);
+
+		// Update the view with initial data
+		updateMainMenuView();
+
+		// Register action listeners
+		this.mainMenuView.getStartGameButton().addActionListener(this);
+		this.mainMenuView.getStartQuizButton().addActionListener(this);
+		this.mainMenuView.getEditModeButton().addActionListener(this);
+		this.mainMenuView.getViewStatisticsButton().addActionListener(this);
+
 	}
 
 	@Override
@@ -34,23 +49,46 @@ public class MainMenuController implements ActionListener {
 
 		switch (command) {
 			case "START_GAME":
-				// Logic for starting the game
+				gameController.startGame();
 				break;
 			case "START_QUIZ":
-				// Logic for starting the quiz
+				quizController.openQuiz();
 				break;
 			case "EDIT_MODE":
-				// Logic for opening edit mode
+				editController.startEditor();
 				break;
 			case "VIEW_STATISTICS":
-				// Logic for viewing statistics
+				statisticsController.startStatistics();
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
 		}
 	}
 
-	public static void main(String[] args) {
-		// Initialize the application
+	private void updateMainMenuView() {
+		// Update the view with data from the UserInfo model
+		frame.setVisible(true);
+		frame.add(mainMenuView);
+
+		mainMenuView.setLevel(userInfo.getLevel());
+		mainMenuView.setPercentToNextLevel(userInfo.percentToNextLevel());
 	}
+
+
+	public void hideMainMenu() {
+		mainMenuView.setVisible(false);
+	}
+
+	public void showMainMenu() {
+		mainMenuView.setVisible(true);
+	}
+
+	public void addPanel(JPanel panel) {
+		frame.add(panel);
+	}
+
+	public void removePanel(JPanel panel) {
+		frame.remove(panel);
+	}
+
 }
