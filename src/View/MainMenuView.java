@@ -42,6 +42,11 @@ public class MainMenuView extends JPanel {
 		styleButton(startGame);
 		styleButton(modeEdit);
 		styleButton(modeStatistics);
+
+		startQuiz.setActionCommand("START_QUIZ");
+		startGame.setActionCommand("START_GAME");
+		modeEdit.setActionCommand("EDIT_MODE");
+		modeStatistics.setActionCommand("VIEW_STATISTICS");
 	}
 
 	private void layoutComponents() {
@@ -83,4 +88,21 @@ public class MainMenuView extends JPanel {
 	public void setPercentToNextLevel(int percent) {
 		nextLevelUpLabel.setText("Fortschritt zum nächsten Level: " + percent + "%");
 	}
+
+	public JButton getStartGameButton() {
+		return startGame;
+	}
+
+	public JButton getStartQuizButton() {
+		return startQuiz;
+	}
+
+	public JButton getEditModeButton() {
+		return modeEdit;
+	}
+
+	public JButton getViewStatisticsButton() {
+		return modeStatistics;
+	}
+
 }

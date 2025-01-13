@@ -13,13 +13,15 @@ public class QuizController implements ActionListener {
 	private QuizView quizView;
 	private QuizSet quizSet;
 	private QuizQuestion currentQuestion;
+	private MainMenuController mainMenuController;
 
-	public QuizController(QuizSet quizSet) {
+	public QuizController(QuizSet quizSet, MainMenuController mainMenuController) {
 		this.quizSet = quizSet;
 		this.quizView = new QuizView(this);
 
 		// Initialize the first question
 		loadNextQuestion();
+		this.mainMenuController = mainMenuController;
 	}
 
 	@Override
@@ -87,8 +89,17 @@ public class QuizController implements ActionListener {
 
 
 	private void handleExitAction() {
-		// Exit the quiz and close the view
-		System.out.println("Exiting the quiz...");
-		System.exit(0); // Or implement proper view disposal in a larger application
+		stopQuiz();
+	}
+
+	public void openQuiz() {
+		mainMenuController.hideMainMenu();
+		mainMenuController.addPanel(quizView);
+		quizView.setVisible(true);
+	}
+
+	public void stopQuiz() {
+		mainMenuController.showMainMenu();
+		mainMenuController.removePanel(quizView);
 	}
 }

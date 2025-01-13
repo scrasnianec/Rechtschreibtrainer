@@ -39,6 +39,8 @@ public class StatisticsView extends JPanel {
 		totalFailures.setFont(labelFont);
 		successRate.setFont(labelFont);
 		winningStreak.setFont(labelFont);
+
+		exit.setActionCommand("EXIT");
 	}
 
 	private void layoutComponents() {

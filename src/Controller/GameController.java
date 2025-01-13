@@ -10,10 +10,13 @@ public class GameController implements ActionListener {
 
 	private GameView gameView;
 	private QuizSet quizSet;
+	private MainMenuController mainMenuController;
 
-	public GameController(GameView gameView, QuizSet quizSet) {
+
+	public GameController(GameView gameView, QuizSet quizSet, MainMenuController mainMenuController) {
 		this.gameView = gameView;
 		this.quizSet = quizSet;
+		this.mainMenuController = mainMenuController;
 	}
 
 	@Override
@@ -25,10 +28,21 @@ public class GameController implements ActionListener {
 				// Logic for showing the next question
 				break;
 			case "EXIT":
-				// Logic for exiting the game
+				stopGame();
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
 		}
+	}
+
+	public void startGame() {
+		mainMenuController.hideMainMenu();
+		mainMenuController.addPanel(gameView);
+		gameView.setVisible(true);
+	}
+
+	public void stopGame() {
+		mainMenuController.showMainMenu();
+		mainMenuController.removePanel(gameView);
 	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 class UserInfoTest {
 
-    private static final String FILE_PATH = "./data/userInfo.ser";
+    private static final String FILE_PATH = ".data/userInfo.ser";
 
     @BeforeEach
     void setUp() {
@@ -88,6 +88,15 @@ class UserInfoTest {
 
         File file = new File(FILE_PATH);
         Assertions.assertTrue(file.exists(), "File should be created after saving user info.");
+    }
+
+    @Test
+    void testSaveUserInfo() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.addPoints(10);
+
+
+
     }
 
     @Test

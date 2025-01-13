@@ -10,10 +10,13 @@ public class EditController implements ActionListener {
 
 	private EditView editView;
 	private SaveLoadQuizFile saveLoad;
+	private MainMenuController mainMenuController;
 
-	public EditController(EditView editView, SaveLoadQuizFile saveLoad) {
+
+	public EditController(EditView editView, SaveLoadQuizFile saveLoad, MainMenuController mainMenuController) {
 		this.editView = editView;
 		this.saveLoad = saveLoad;
+		this.mainMenuController = mainMenuController;
 	}
 
 	@Override
@@ -31,10 +34,23 @@ public class EditController implements ActionListener {
 				// Logic for creating a new question
 				break;
 			case "EXIT":
-				// Logic for exiting the editor
+				stopEditor();
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
 		}
 	}
+
+	public void startEditor() {
+		mainMenuController.hideMainMenu();
+		mainMenuController.addPanel(editView);
+		editView.setVisible(true);
+	}
+
+	public void stopEditor() {
+		mainMenuController.showMainMenu();
+		mainMenuController.removePanel(editView);
+	}
+
+
 }
