@@ -3,8 +3,6 @@ package Model;
 import java.net.URL;
 
 public class PictureQuestion extends QuizQuestion {
-
-	private static final String question = "Was ist in diesem Bild zu sehen? (Beachte die Rechtschreibung)";
 	private String imageURL;
 	private String correctAnswer;
 
@@ -20,7 +18,7 @@ public class PictureQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Beschreiben Sie, was Sie auf dem Bild sehen. URL: " + imageURL;
+		return "Was ist in diesem Bild zu sehen? (Beachte die Rechtschreibung)";
 	}
 
 	@Override

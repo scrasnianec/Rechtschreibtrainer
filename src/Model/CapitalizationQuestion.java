@@ -1,8 +1,6 @@
 package Model;
 
 public class CapitalizationQuestion extends QuizQuestion {
-
-	private static final String question = "Tippe diesen Satz ab mit korrekter Groß- und Kleinschreibung.";
 	private String correctAnswer;
 
 	public CapitalizationQuestion(String correctAnswer) {
@@ -16,7 +14,7 @@ public class CapitalizationQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Stellen Sie sicher, dass Ihre Antwort die gleiche Groß- und Kleinschreibung wie das Original hat.";
+		return "Tippe diesen Satz ab mit korrekter Groß- und Kleinschreibung: \n" + correctAnswer.toLowerCase();
 	}
 
 	@Override

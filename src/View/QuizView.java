@@ -19,8 +19,6 @@ public class QuizView extends JPanel {
 	private JButton next;
 	private JTextField inputAnswer;
 	private JLabel question;
-	private JLabel relatedWord;
-	private JLabel uncompleteWord;
 	private JLabel picture;
 	private JLabel loadingLabel; // New label for loading indicator
 
@@ -30,7 +28,7 @@ public class QuizView extends JPanel {
 
 	public QuizView(QuizController quizController) {
 		FlatDarkLaf.setup();
-		setLayout(new BorderLayout(10, 10));
+		setLayout(new BorderLayout(2, 2));
 		initializeComponents();
 		layoutComponents();
 
@@ -51,8 +49,6 @@ public class QuizView extends JPanel {
 
 		question = new JLabel("DEBUG", SwingConstants.CENTER);
 		inputAnswer = new JTextField(20);
-		relatedWord = new JLabel("", SwingConstants.CENTER);
-		uncompleteWord = new JLabel("", SwingConstants.CENTER);
 		picture = new JLabel();
 		picture.setHorizontalAlignment(SwingConstants.CENTER);
 		picture.setVerticalAlignment(SwingConstants.CENTER);
@@ -61,27 +57,23 @@ public class QuizView extends JPanel {
 		loadingLabel.setVisible(false); // Initially hidden
 
 		// Styling components
-		relatedWord.setFont(new Font("Arial", Font.BOLD, 16));
-		uncompleteWord.setFont(new Font("Arial", Font.BOLD, 16));
 		question.setFont(new Font("Arial", Font.BOLD, 16));
 
 		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.GRAY, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+				BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 	}
 
 	private void layoutComponents() {
-		JPanel topPanel = new JPanel(new GridLayout(3, 1, 5, 5));
+		JPanel topPanel = new JPanel(new FlowLayout());
 		topPanel.add(question);
-		topPanel.add(relatedWord);
-		topPanel.add(uncompleteWord);
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.add(picture, BorderLayout.CENTER);
 		centerPanel.add(loadingLabel, BorderLayout.SOUTH); // Add loading label below the picture
 
 		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
-		bottomPanel.add(inputAnswer, BorderLayout.CENTER);
+		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 10));
 		buttonPanel.add(next);
@@ -89,7 +81,7 @@ public class QuizView extends JPanel {
 
 		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
@@ -99,26 +91,21 @@ public class QuizView extends JPanel {
 		return inputAnswer.getText();
 	}
 
-	public void setRelatedWord(String word) {
-		relatedWord.setText(word);
-	}
-
-	public void setUncompleteWord(String word) {
-		uncompleteWord.setText(word);
-	}
-
 	/**
 	 * Asynchronously loads and sets an image from the provided URL.
 	 *
 	 * @param url The URL of the image to load.
 	 */
 	public void setPictureURL(String url) {
+		// add that space for picture is only used when picture question is asked
+
 		// Clear any existing image
 		picture.setIcon(null);
 		loadingLabel.setVisible(false);
 		originalImage = null; // Reset original image
 
 		if (url != null) {
+			System.out.println("Loading image from URL: " + url);
 			if (imageCache.containsKey(url)) {
 				// Use cached image
 				picture.setIcon(imageCache.get(url));
@@ -177,6 +164,7 @@ public class QuizView extends JPanel {
 			});
 		} else {
 			picture.setIcon(null); // Clear the icon if the URL is null
+			System.err.println("URL is null.");
 		}
 	}
 
@@ -220,5 +208,9 @@ public class QuizView extends JPanel {
 
 	public JTextField getInputAnswerField() { // Changed return type to JTextField
 		return inputAnswer;
+	}
+
+	public void clearInput() {
+		inputAnswer.setText("");
 	}
 }

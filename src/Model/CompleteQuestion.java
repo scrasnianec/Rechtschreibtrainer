@@ -1,8 +1,6 @@
 package Model;
 
 public class CompleteQuestion extends QuizQuestion {
-
-	private static final String question = "Vervollständige die verwandten Wörter. (Beachte die Rechtschreibung)";
 	private String relatedWord;
 	private String uncompleteWord;
 	private String answerToCompleteWord;
@@ -20,7 +18,7 @@ public class CompleteQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Ergänzen Sie das unvollständige Wort korrekt, basierend auf das verwandte Wort: " + relatedWord;
+		return "Vervollständige die verwandten Wörter. (Beachte die Rechtschreibung): " + uncompleteWord;
 	}
 
 	@Override

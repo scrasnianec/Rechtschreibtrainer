@@ -1,8 +1,6 @@
 package Model;
 
 public class SSharpQuestion extends QuizQuestion {
-
-	private static final String question = "Trage die Nennformen (Infinitive) ein.";
 	private String relatedWord;
 	private String correctAnswer;
 
@@ -18,7 +16,7 @@ public class SSharpQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Geben Sie die Infinitivform des Wortes ein: " + relatedWord;
+		return "Geben Sie die Nennform (Infinitivform) von " + relatedWord + " ein.";
 	}
 
 	@Override

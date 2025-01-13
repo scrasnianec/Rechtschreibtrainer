@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class QuizController implements ActionListener {
-
 	private QuizView quizView;
 	private QuizSet quizSet;
 	private QuizQuestion currentQuestion;
@@ -60,29 +59,15 @@ public class QuizController implements ActionListener {
 		resetQuizView(); // Clear the view to avoid stale data from previous questions
 
 		if (currentQuestion != null) {
-			if (currentQuestion instanceof CompleteQuestion) {
-				CompleteQuestion completeQuestion = (CompleteQuestion) currentQuestion;
-				quizView.setRelatedWord(completeQuestion.getRelatedWord());
-			} else if (currentQuestion instanceof PictureQuestion) {
+			quizView.setQuestion(currentQuestion.questionExplanation());
+			if (currentQuestion instanceof PictureQuestion) {
 				PictureQuestion pictureQuestion = (PictureQuestion) currentQuestion;
 				quizView.setPictureURL(pictureQuestion.getImageURL());
-			} else if (currentQuestion instanceof SSharpQuestion) {
-				SSharpQuestion sSharpQuestion = (SSharpQuestion) currentQuestion;
-				quizView.setRelatedWord(sSharpQuestion.getRelatedWord());
-			} else if (currentQuestion instanceof CapitalizationQuestion) {
-				CapitalizationQuestion capitalizationQuestion = (CapitalizationQuestion) currentQuestion;
-				quizView.setRelatedWord(capitalizationQuestion.getRelatedWord().toLowerCase());
-			} else {
-				// Handle unexpected question type
-				System.err.println("Unsupported question type: " + currentQuestion.getClass().getSimpleName());
 			}
-			quizView.setQuestion(currentQuestion.questionExplanation());
 		} else {
 			// Handle case when no more questions are available
 			quizView.getNextButton().setEnabled(false);
 			System.out.println("Quiz finished!");
-			quizView.setRelatedWord("Quiz Complete!");
-			quizView.setUncompleteWord("");
 			quizView.setPictureURL(null);
 		}
 	}
@@ -91,9 +76,9 @@ public class QuizController implements ActionListener {
 	 * Resets the quiz view to clear any stale data from the previous question.
 	 */
 	private void resetQuizView() {
-		quizView.setRelatedWord("");
-		quizView.setUncompleteWord("");
-		quizView.setPictureURL(null);
+		quizView.clearInput();
+		// ts pmo ong dis cooked weil dings ähm bild geht nicht weg wenn dings es nächste dings is
+		// quizView.setPictureURL(null);
 	}
 
 	public QuizView getView() {
