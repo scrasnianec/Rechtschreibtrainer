@@ -21,6 +21,7 @@ public class QuizView extends JPanel {
 	private JLabel question;
 	private JLabel picture;
 	private JLabel loadingLabel; // New label for loading indicator
+	private JLabel feedbackMessage; // New label for feedback messages
 
 	// Simple image cache
 	private static final Map<URL, ImageIcon> imageCache = new HashMap<>();
@@ -62,11 +63,15 @@ public class QuizView extends JPanel {
 		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.GRAY, 1),
 				BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+
+		feedbackMessage = new JLabel("DEBUG", SwingConstants.CENTER); // Initialize feedback message label
+		feedbackMessage.setFont(new Font("Arial", Font.BOLD, 14));
 	}
 
 	private void layoutComponents() {
 		JPanel topPanel = new JPanel(new FlowLayout());
-		topPanel.add(question);
+		topPanel.add(question, BorderLayout.NORTH);
+		topPanel.add(feedbackMessage, BorderLayout.SOUTH); // Add feedback message below the question
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.add(picture, BorderLayout.CENTER);
@@ -201,13 +206,15 @@ public class QuizView extends JPanel {
 	public void setOnlyQuestion(String questionText) {
 		// Set the question text
 		question.setText(questionText);
+		feedbackMessage.setText(erorrMessage);
 
 		// Update layout for only question display
 		removeAll(); // Clear existing components
 
 		// Add question to the center of the BorderLayout
-		JPanel centerPanel = new JPanel(new GridBagLayout());
-		centerPanel.add(question); // Center the question
+		JPanel centerPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+		centerPanel.add(question, BorderLayout.NORTH); // Center the question
+		centerPanel.add(feedbackMessage, BorderLayout.SOUTH); // Add feedback message below the question
 
 		// Add input and buttons at the bottom
 		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
@@ -230,12 +237,14 @@ public class QuizView extends JPanel {
 	public void setPictureQuestion(String questionText, String imageURL) {
 		// Set the question text
 		question.setText(questionText);
+		feedbackMessage.setText(erorrMessage);
 
 		// Update layout for question and picture
 		removeAll(); // Clear existing components
 
-		JPanel topPanel = new JPanel(new FlowLayout());
-		topPanel.add(question); // Question at the top
+		JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
+		topPanel.add(question, BorderLayout.NORTH); // Question at the top
+		topPanel.add(feedbackMessage, BorderLayout.SOUTH); // Feedback message below the question
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.add(picture, BorderLayout.CENTER);
@@ -279,4 +288,19 @@ public class QuizView extends JPanel {
 	public void clearInput() {
 		inputAnswer.setText("");
 	}
+
+	private String erorrMessage = "";
+
+	public void setFeedbackMessage(String message) {
+		erorrMessage = message;
+	}
+
+	public void setMessageColor(Color color) {
+		feedbackMessage.setForeground(color);
+	}
+
+	public void clearFeedbackMessage() {
+		feedbackMessage.setText("");
+	}
+
 }

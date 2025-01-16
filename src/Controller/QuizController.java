@@ -1,10 +1,11 @@
 package Controller;
 
 import Model.PictureQuestion;
-import View.QuizView;
 import Model.QuizSet;
 import Model.QuizQuestion;
+import View.QuizView;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -46,9 +47,12 @@ public class QuizController implements ActionListener {
 		// Update the quiz history and provide feedback
 		quizSet.addHistoryEntry(isCorrect);
 		if (isCorrect) {
-			System.out.println("Correct answer!");
+			quizView.setFeedbackMessage("Correct answer!");
+			quizView.setMessageColor(Color.GREEN);
+
 		} else {
-			System.out.println("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			quizView.setMessageColor(Color.RED);
 		}
 
 		// Load the next question
@@ -68,23 +72,16 @@ public class QuizController implements ActionListener {
 		} else {
 			// Handle case when no more questions are available
 			quizView.getNextButton().setEnabled(false);
-			System.out.println("Quiz finished!");
+			quizView.setFeedbackMessage("Quiz finished!");
 			quizView.setPictureURL(null);
 		}
 	}
 
-	/**
-	 * Resets the quiz view to clear any stale data from the previous question.
-	 */
 	private void resetQuizView() {
 		quizView.clearInput();
+		quizView.clearFeedbackMessage();
 		quizView.setPictureURL(null);
 	}
-
-	public QuizView getView() {
-		return quizView;
-	}
-
 
 	private void handleExitAction() {
 		stopQuiz();
@@ -99,5 +96,9 @@ public class QuizController implements ActionListener {
 	public void stopQuiz() {
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(quizView);
+	}
+
+	public QuizView getView() {
+		return quizView;
 	}
 }

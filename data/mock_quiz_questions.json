@@ -10,7 +10,7 @@
   },
   {
     "relatedWord": "Auto",
-    "uncompleteWord": "A___",
+    "uncompleteWord": "A_to",
     "answerToCompleteWord": "Auto"
   },
   {
@@ -20,12 +20,12 @@
   },
   {
     "relatedWord": "Hund",
-    "uncompleteWord": "H__d",
+    "uncompleteWord": "Hu_d",
     "answerToCompleteWord": "Hund"
   },
   {
     "relatedWord": "Blume",
-    "uncompleteWord": "Blu__",
+    "uncompleteWord": "Blu_e",
     "answerToCompleteWord": "Blume"
   },
   {
@@ -45,19 +45,19 @@
     "correctAnswer": "Sonne"
   },
   {
-    "relatedWord": "spielen",
+    "relatedWord": "spielte",
     "correctAnswer": "spielen"
   },
   {
-    "relatedWord": "sehen",
+    "relatedWord": "sah",
     "correctAnswer": "sehen"
   },
   {
-    "relatedWord": "fahren",
+    "relatedWord": "fuhr",
     "correctAnswer": "fahren"
   },
   {
-    "relatedWord": "essen",
+    "relatedWord": "aß",
     "correctAnswer": "essen"
   }
 ]
