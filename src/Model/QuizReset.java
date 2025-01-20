@@ -1,13 +1,12 @@
-import Model.*;
+package Model;
 
-import javax.xml.crypto.Data;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockQuizFileCreator {
-
-    public static void main(String[] args) {
-        // Pfad zur Mock-Datei
+public class QuizReset {
+    public static void resetQuizFile(){
+        String mockFilePath = "./data/questions_data.json";
 
         // Instanziiere SaveLoadQuizFile mit dem Pfad
         SaveLoadQuizFile saveLoadQuizFile = new SaveLoadQuizFile();
@@ -37,6 +36,5 @@ public class MockQuizFileCreator {
 
         saveLoadQuizFile.saveQuestions(mockQuestions);
 
-        System.out.println("Mock-Datei wurde erfolgreich erstellt: " + DataPath.QUIZ_PATH);
     }
 }

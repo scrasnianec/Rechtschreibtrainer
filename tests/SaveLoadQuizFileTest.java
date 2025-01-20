@@ -5,17 +5,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 
 class SaveLoadQuizFileTest {
 
     private SaveLoadQuizFile saveLoadQuizFile;
-    private String testFilePath = "data/test_questions.json"; // Temporary file for testing
 
     @BeforeEach
     void setUp() {
-        saveLoadQuizFile = new SaveLoadQuizFile(testFilePath);
+        saveLoadQuizFile = new SaveLoadQuizFile();
     }
 
     @Test
@@ -42,7 +42,7 @@ class SaveLoadQuizFileTest {
     @Test
     void testLoadQuestions_FileNotExists() {
         // Test loading when file does not exist (ensure no exception is thrown)
-        SaveLoadQuizFile invalidSaveLoadQuizFile = new SaveLoadQuizFile("invalid_path.json");
+        SaveLoadQuizFile invalidSaveLoadQuizFile = new SaveLoadQuizFile();
         List<QuizQuestion> loadedQuestions = invalidSaveLoadQuizFile.loadQuestions();
 
         assertNull(loadedQuestions, "Questions should be null when file does not exist");
@@ -80,7 +80,7 @@ class SaveLoadQuizFileTest {
     @AfterEach
     void testFileDeletionAfterTest() {
         // Clean up test file after running tests
-        File file = new File(testFilePath);
+        File file = new File(DataPath.QUIZ_PATH);
         if (file.exists()) {
             file.delete();
         }

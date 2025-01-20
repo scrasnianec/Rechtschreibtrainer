@@ -15,7 +15,7 @@ class ViewTest {
         UserInfo userInfo = new UserInfo();
         StatisticsView statisticsView = new StatisticsView();
 
-        SaveLoadQuizFile save = new SaveLoadQuizFile("data/mock_quiz_questions.json");
+        SaveLoadQuizFile save = new SaveLoadQuizFile();
         MainMenuView mainMenuView = new MainMenuView();
         MainMenuController mainMenuController = new MainMenuController(view);
 

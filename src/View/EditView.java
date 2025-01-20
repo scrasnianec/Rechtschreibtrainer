@@ -1,8 +1,11 @@
 package View;
 
 import javax.swing.*;
+
+import Model.QuizQuestion;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.*;
+import java.util.List;
 
 public class EditView extends JPanel {
 
@@ -16,6 +19,7 @@ public class EditView extends JPanel {
 	private JButton save;
 	private JButton newF;
 	private JButton load;
+	private JButton reset;
 	private JComboBox<String> loadQuestion;
 
 	public EditView() {
@@ -36,19 +40,21 @@ public class EditView extends JPanel {
 		save = new JButton("Save");
 		newF = new JButton("New Question");
 		load = new JButton("Load File");
+		reset = new JButton("Reset File");
 		loadQuestion = new JComboBox<>();
 
 		// Style components
 		questionType.setFont(new Font("Arial", Font.PLAIN, 14));
-		inputAnswer.setFont(new Font("Arial", Font.PLAIN, 14));
 		relatedWord.setFont(new Font("Arial", Font.PLAIN, 14));
 		uncompleteWord.setFont(new Font("Arial", Font.PLAIN, 14));
 		pictureURL.setFont(new Font("Arial", Font.PLAIN, 14));
+		inputAnswer.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		exit.setFont(new Font("Arial", Font.BOLD, 14));
 		save.setFont(new Font("Arial", Font.BOLD, 14));
 		newF.setFont(new Font("Arial", Font.BOLD, 14));
 		load.setFont(new Font("Arial", Font.BOLD, 14));
+		reset.setFont(new Font("Arial", Font.BOLD, 14));
 		loadQuestion.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		// Set border color and padding
@@ -72,6 +78,7 @@ public class EditView extends JPanel {
 		save.setActionCommand("SAVE");
 		newF.setActionCommand("NEW");
 		load.setActionCommand("LOAD");
+		reset.setActionCommand("RESET");
 	}
 
 	private void layoutComponents() {
@@ -83,10 +90,11 @@ public class EditView extends JPanel {
 		inputPanel.add(createLabeledComponent("Uncomplete Word:", uncompleteWord));
 		inputPanel.add(createLabeledComponent("Picture URL:", pictureURL));
 
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 10, 10));
 		buttonPanel.add(load);
 		buttonPanel.add(newF);
 		buttonPanel.add(save);
+		buttonPanel.add(reset);
 		buttonPanel.add(exit);
 
 		JPanel loadQuestionPanel = new JPanel(new BorderLayout());
@@ -162,5 +170,18 @@ public class EditView extends JPanel {
 
 	public JComboBox<String> getLoadQuestionComboBox() {
 		return loadQuestion;
+	}
+
+	public JButton getResetButton() {
+		return reset;
+	}
+
+	public void setLoadQuestions(List<QuizQuestion> questions) {
+		loadQuestion.removeAllItems();
+		for(int i = 0; i < questions.size(); i++) {
+			loadQuestion.addItem(questions.get(i).questionExplanation());
+		}
+
+		this.repaint();
 	}
 }

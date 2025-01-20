@@ -3,18 +3,20 @@ package Model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import javax.xml.crypto.Data;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.io.File;
+
 
 public class SaveLoadQuizFile {
-	private String path;
 	private final Gson gson;
 
-	public SaveLoadQuizFile(String path) {
-		this.path = path;
+	public SaveLoadQuizFile() {
 		this.gson = new GsonBuilder()
 				.registerTypeAdapter(QuizQuestion.class, new QuizQuestionDeserializer())
 				.setPrettyPrinting()
@@ -22,7 +24,13 @@ public class SaveLoadQuizFile {
 	}
 
 	public List<QuizQuestion> loadQuestions() {
-		try (FileReader reader = new FileReader(path)) {
+		File file = new File(DataPath.QUIZ_PATH);
+		if(!file.exists()) {
+			QuizReset.resetQuizFile();
+			loadQuestions();
+		}
+
+		try (FileReader reader = new FileReader(DataPath.QUIZ_PATH)) {
 			Type listType = new TypeToken<List<QuizQuestion>>() {}.getType();
 			return gson.fromJson(reader, listType);
 		} catch (IOException e) {
@@ -32,7 +40,14 @@ public class SaveLoadQuizFile {
 	}
 
 	public void saveQuestions(List<QuizQuestion> questionList) {
-		try (FileWriter writer = new FileWriter(path)) {
+		File file = new File(DataPath.QUIZ_PATH);
+		if(!file.exists()) {
+			if(file.mkdirs()){
+				System.out.println("Directory is created!");
+			}
+		}
+
+		try (FileWriter writer = new FileWriter(DataPath.QUIZ_PATH)) {
 			gson.toJson(questionList, writer);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -10,8 +10,8 @@ public class QuizSet {
 	private QuizQuestion quizQuestion;
 	private SaveLoadQuizFile saveLoadQuizFile;
 
-	public QuizSet(SaveLoadQuizFile saveLoadQuizFile) {
-		this.saveLoadQuizFile = saveLoadQuizFile;
+	public QuizSet() {
+		this.saveLoadQuizFile = new SaveLoadQuizFile();
 		this.quizSet = saveLoadQuizFile.loadQuestions();
 		this.setHistory = new boolean[quizSet.size()];
 	}

@@ -25,12 +25,11 @@ public class MainMenuController implements ActionListener {
 		this.frame = frame;
 
 		userInfo = new UserInfo();
-		save = new SaveLoadQuizFile("data/mock_quiz_questions.json");
 		mainMenuView = new MainMenuView();
 		statisticsController = new StatisticsController(userInfo, this);
-		editController = new EditController(new EditView(), save, this);
-		quizController = new QuizController(new QuizSet(save), this);
-		gameController = new GameController(new GameView(), new QuizSet(save), this);
+		editController = new EditController(new EditView(), this);
+		quizController = new QuizController(new QuizSet(), this);
+		gameController = new GameController(new GameView(), new QuizSet(), this);
 
 		// Update the view with initial data
 		updateMainMenuView();

@@ -1,3 +1,4 @@
+import Model.DataPath;
 import Model.QuizQuestion;
 import Model.QuizSet;
 import Model.SaveLoadQuizFile;
@@ -16,10 +17,9 @@ public class QuizSetTest {
     @BeforeEach
     public void setUp() {
         // Mock-Dateipfad zur JSON-Datei
-        String mockFilePath = "./data/mock_quiz_questions.json";
-        if (!(new File(mockFilePath).exists())) throw new RuntimeException("Mock File not Found");
-        saveLoadQuizFile = new SaveLoadQuizFile(mockFilePath);
-        quizSet = new QuizSet(saveLoadQuizFile);
+        if (!(new File(DataPath.QUIZ_PATH).exists())) throw new RuntimeException("Mock File not Found");
+        saveLoadQuizFile = new SaveLoadQuizFile();
+        quizSet = new QuizSet();
     }
 
     @Test
