@@ -5,13 +5,14 @@ import java.util.Random;
 
 public class QuizSet {
 
+	public static final int NUM_QUESTIONS_IN_SET = 5;
 	private List<QuizQuestion> quizSet;
 	private boolean[] setHistory;
 	private QuizQuestion quizQuestion;
 	private SaveLoadQuizFile saveLoadQuizFile;
 
-	public QuizSet() {
-		this.saveLoadQuizFile = new SaveLoadQuizFile();
+	public QuizSet(SaveLoadQuizFile saveLoadQuizFile) {
+		this.saveLoadQuizFile = saveLoadQuizFile;
 		this.quizSet = saveLoadQuizFile.loadQuestions();
 		this.setHistory = new boolean[quizSet.size()];
 	}
