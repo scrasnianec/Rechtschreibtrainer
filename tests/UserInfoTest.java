@@ -6,15 +6,12 @@ import java.util.List;
 
 class UserInfoTest {
 
-    private static final String FILE_PATH = ".data/userInfo.ser";
+    private static final String FILE_PATH = "./data/userInfo.ser";
 
     @BeforeEach
     void setUp() {
         // Delete the file before each test to ensure a clean environment
         File file = new File(FILE_PATH);
-        if (file.exists()) {
-            file.delete();
-        }
     }
 
     @AfterEach
