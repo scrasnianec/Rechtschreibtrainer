@@ -30,8 +30,8 @@ public class QuizSetTest {
     }
 
     @Test
-    public void testGetRandomQuestionFromSet() {
-        QuizQuestion randomQuestion = quizSet.getRandomQuestionFromSet();
+    public void testGetRandomQuestionFromFile() {
+        QuizQuestion randomQuestion = quizSet.getRandomQuestionFromFile();
         assertNotNull(randomQuestion, "Es sollte eine zufällige Frage aus dem Set zurückgegeben werden.");
         assertTrue(randomQuestion instanceof QuizQuestion, "Das zurückgegebene Objekt sollte eine QuizQuestion sein.");
     }

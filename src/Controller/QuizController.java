@@ -64,8 +64,10 @@ public class QuizController implements ActionListener {
 
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
-		resetQuizView(); // Clear the view to avoid stale data from previous questions
+		resetQuizView(); // Clear stale data
+
 		if (currentQuestion != null) {
+			// Handle regular questions
 			if (currentQuestion instanceof PictureQuestion) {
 				PictureQuestion pictureQuestion = (PictureQuestion) currentQuestion;
 				quizView.setPictureQuestion(currentQuestion.questionExplanation(), pictureQuestion.getImageURL());
@@ -73,9 +75,20 @@ public class QuizController implements ActionListener {
 				quizView.setOnlyQuestion(currentQuestion.questionExplanation());
 			}
 		} else {
-			// Handle case when no more questions are available
+			// Handle the end of the quiz
 			quizView.getNextButton().setEnabled(false);
-			quizView.setFeedbackMessage("Quiz finished!");
+			String feedback = "Ende!\nDu hast " + quizSet.calculatePointsEarned() + " von " + quizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
+			if (quizSet.calculatePointsEarned() == quizSet.NUM_QUESTIONS_IN_SET) {
+				quizView.setMessageColor(Color.GREEN);
+				feedback += "Perfekt!";
+			} else if (quizSet.calculatePointsEarned() == 0) {
+				quizView.setMessageColor(Color.RED);
+				feedback += "Das war leider nix!";
+			} else {
+				quizView.setMessageColor(Color.ORANGE);
+				feedback += "Nicht schlecht!";
+			}
+			quizView.setFeedbackMessage(feedback);
 			quizView.setPictureURL(null);
 		}
 	}

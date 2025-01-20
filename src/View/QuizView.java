@@ -206,7 +206,7 @@ public class QuizView extends JPanel {
 	public void setOnlyQuestion(String questionText) {
 		// Set the question text
 		question.setText(questionText);
-		feedbackMessage.setText(erorrMessage);
+		feedbackMessage.setText(errorMessage);
 
 		// Update layout for only question display
 		removeAll(); // Clear existing components
@@ -237,7 +237,7 @@ public class QuizView extends JPanel {
 	public void setPictureQuestion(String questionText, String imageURL) {
 		// Set the question text
 		question.setText(questionText);
-		feedbackMessage.setText(erorrMessage);
+		feedbackMessage.setText(errorMessage);
 
 		// Update layout for question and picture
 		removeAll(); // Clear existing components
@@ -289,10 +289,13 @@ public class QuizView extends JPanel {
 		inputAnswer.setText("");
 	}
 
-	private String erorrMessage = "";
+	private String errorMessage = "";
 
 	public void setFeedbackMessage(String message) {
-		erorrMessage = message;
+		feedbackMessage.setText(message);
+		errorMessage = message; // Keep the variable for debugging purposes, if needed
+		revalidate();
+		repaint(); // Ensure the UI reflects changes
 	}
 
 	public void setMessageColor(Color color) {
