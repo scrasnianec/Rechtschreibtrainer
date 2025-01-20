@@ -57,6 +57,9 @@ public class QuizController implements ActionListener {
 
 		// Load the next question
 		loadNextQuestion();
+
+		// Set the focus to the input field
+		quizView.setFocusToInput();
 	}
 
 	private void loadNextQuestion() {

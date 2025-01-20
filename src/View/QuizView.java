@@ -303,4 +303,8 @@ public class QuizView extends JPanel {
 		feedbackMessage.setText("");
 	}
 
+	public void setFocusToInput() {
+		inputAnswer.requestFocus();
+	}
+
 }
