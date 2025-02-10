@@ -53,7 +53,7 @@ public class QuizController implements ActionListener {
 			quizView.setFeedbackMessage("Correct answer!");
 			quizView.setMessageColor(Color.GREEN);
 		} else {
-			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.getAnswer());
 			quizView.setMessageColor(Color.RED);
 		}
 

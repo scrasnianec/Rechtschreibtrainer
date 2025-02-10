@@ -51,7 +51,7 @@ public class GameController implements ActionListener {
 			gameView.setFeedbackMessage("Correct answer!");
 			gameView.setMessageColor(Color.GREEN);
 		} else {
-			gameView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			gameView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.getAnswer());
 			gameView.setMessageColor(Color.RED);
 			wrongAnswersCount++;
 			gameView.addHangmanStep();
