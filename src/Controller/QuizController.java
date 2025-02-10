@@ -41,25 +41,27 @@ public class QuizController implements ActionListener {
 	}
 
 	private void handleNextAction() {
+		boolean isCorrect = handleInput();
+		quizSet.addHistoryEntry(isCorrect);
+	}
+
+	public boolean handleInput() {
 		String userAnswer = quizView.getAnswerInput();
 		boolean isCorrect = currentQuestion.validateAnswer(userAnswer);
 
-		// Update the quiz history and provide feedback
-		quizSet.addHistoryEntry(isCorrect);
 		if (isCorrect) {
 			quizView.setFeedbackMessage("Correct answer!");
 			quizView.setMessageColor(Color.GREEN);
-
 		} else {
 			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
 			quizView.setMessageColor(Color.RED);
 		}
 
-		// Load the next question
 		loadNextQuestion();
 
-		// Set the focus to the input field
 		quizView.setFocusToInput();
+
+		return isCorrect;
 	}
 
 	private void loadNextQuestion() {

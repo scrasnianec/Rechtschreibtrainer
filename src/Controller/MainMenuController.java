@@ -29,7 +29,7 @@ public class MainMenuController implements ActionListener {
 		statisticsController = new StatisticsController(userInfo, this);
 		editController = new EditController(new EditView(), this);
 		quizController = new QuizController(new QuizSet(), this);
-		gameController = new GameController(new GameView(), new QuizSet(), this);
+		gameController = new GameController(new QuizSet(), this);
 
 		// Update the view with initial data
 		updateMainMenuView();
