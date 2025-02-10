@@ -2,20 +2,12 @@ package Controller;
 
 import View.EditView;
 import Model.*;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.xml.crypto.Data;
 
 public class EditController implements ActionListener {
 
@@ -23,17 +15,18 @@ public class EditController implements ActionListener {
 	private SaveLoadQuizFile saveLoad;
 	private MainMenuController mainMenuController;
 
-
 	public EditController(EditView editView, MainMenuController mainMenuController) {
 		this.mainMenuController = mainMenuController;
 		this.editView = editView;
 		this.saveLoad = new SaveLoadQuizFile();
+
+		// Add action listeners to buttons
 		editView.getSaveButton().addActionListener(this);
 		editView.getNewButton().addActionListener(this);
 		editView.getExitButton().addActionListener(this);
 		editView.getResetButton().addActionListener(this);
-		editView.getLoadButton().addActionListener(this);
-		editView.getResetButton().addActionListener(this);
+		editView.getDeleteQuestionButton().addActionListener(this);
+		editView.getDeleteAllButton().addActionListener(this);
 	}
 
 	@Override
@@ -42,7 +35,13 @@ public class EditController implements ActionListener {
 		switch (command) {
 			case "SAVE":
 				saveQuestion();
-				break;
+				try {
+					List<QuizQuestion> questions = loadExistingQuestions();
+					editView.setLoadQuestions(questions);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(editView, "Error loading questions.", "Error", JOptionPane.ERROR_MESSAGE);
+				}				break;
 			case "NEW":
 				clearFields();
 				break;
@@ -53,8 +52,11 @@ public class EditController implements ActionListener {
 				QuizReset.resetQuizFile();
 				JOptionPane.showMessageDialog(editView, "Quiz file reset successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
 				break;
-			case "LOAD":
-				loadQuizFile();
+			case "DELETE_QUESTION":
+				deleteSelectedQuestion();
+				break;
+			case "DELETE_ALL":
+				deleteAllQuestions();
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
@@ -97,14 +99,42 @@ public class EditController implements ActionListener {
 		}
 	}
 
-	public void loadQuizFile() {
+	private void deleteSelectedQuestion() {
+		int selectedIndex = editView.getLoadQuestionComboBox().getSelectedIndex();
+		if (selectedIndex < 0) {
+			JOptionPane.showMessageDialog(editView, "No question selected for deletion.", "Warning", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
 		try {
 			List<QuizQuestion> questions = loadExistingQuestions();
-			editView.setLoadQuestions(questions);
+			questions.remove(selectedIndex); // Remove the selected question
+			saveQuestionsToFile(questions); // Save updated list to file
+			editView.setLoadQuestions(questions); // Refresh UI
+			JOptionPane.showMessageDialog(editView, "Question deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(editView, "Error loading questions.", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
+			JOptionPane.showMessageDialog(editView, "Error deleting question.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void deleteAllQuestions() {
+		int confirmation = JOptionPane.showConfirmDialog(
+				editView,
+				"Are you sure you want to delete all questions?",
+				"Confirm Deletion",
+				JOptionPane.YES_NO_OPTION
+		);
+		if (confirmation == JOptionPane.YES_OPTION) {
+			try {
+				List<QuizQuestion> questions = new ArrayList<>();
+				saveQuestionsToFile(questions); // Save empty list to file
+				editView.setLoadQuestions(questions); // Refresh UI
+				JOptionPane.showMessageDialog(editView, "All questions deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(editView, "Error deleting all questions.", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
@@ -129,6 +159,13 @@ public class EditController implements ActionListener {
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(editView);
 		editView.setVisible(true);
+		try {
+			List<QuizQuestion> questions = loadExistingQuestions();
+			editView.setLoadQuestions(questions);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(editView, "Error loading questions.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void stopEditor() {

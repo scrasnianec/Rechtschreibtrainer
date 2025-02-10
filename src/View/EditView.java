@@ -1,9 +1,9 @@
 package View;
 
-import javax.swing.*;
-
 import Model.QuizQuestion;
 import com.formdev.flatlaf.FlatDarkLaf;
+
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
@@ -18,7 +18,8 @@ public class EditView extends JPanel {
 	private JButton exit;
 	private JButton save;
 	private JButton newF;
-	private JButton load;
+	private JButton deleteQuestion;
+	private JButton deleteAll;
 	private JButton reset;
 	private JComboBox<String> loadQuestion;
 
@@ -37,13 +38,13 @@ public class EditView extends JPanel {
 		pictureURL = new JTextField(20);
 
 		exit = new JButton("Exit");
-		save = new JButton("Save");
+		save = new JButton("Save Question");
 		newF = new JButton("New Question");
-		load = new JButton("Load File");
+		deleteQuestion = new JButton("Delete Question");
+		deleteAll = new JButton("Delete All Questions");
 		reset = new JButton("Reset File");
 		loadQuestion = new JComboBox<>();
 
-		// Style components
 		questionType.setFont(new Font("Arial", Font.PLAIN, 14));
 		relatedWord.setFont(new Font("Arial", Font.PLAIN, 14));
 		uncompleteWord.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -53,36 +54,22 @@ public class EditView extends JPanel {
 		exit.setFont(new Font("Arial", Font.BOLD, 14));
 		save.setFont(new Font("Arial", Font.BOLD, 14));
 		newF.setFont(new Font("Arial", Font.BOLD, 14));
-		load.setFont(new Font("Arial", Font.BOLD, 14));
+		deleteQuestion.setFont(new Font("Arial", Font.BOLD, 14));
+		deleteAll.setFont(new Font("Arial", Font.BOLD, 14));
 		reset.setFont(new Font("Arial", Font.BOLD, 14));
 		loadQuestion.setFont(new Font("Arial", Font.PLAIN, 14));
-
-		// Set border color and padding
-		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.GRAY, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-		relatedWord.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.GRAY, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-		uncompleteWord.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.GRAY, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-		pictureURL.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.GRAY, 1),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 
 		exit.setActionCommand("EXIT");
 		save.setActionCommand("SAVE");
 		newF.setActionCommand("NEW");
-		load.setActionCommand("LOAD");
 		reset.setActionCommand("RESET");
+		deleteQuestion.setActionCommand("DELETE_QUESTION");
+		deleteAll.setActionCommand("DELETE_ALL");
 	}
 
 	private void layoutComponents() {
 		JPanel inputPanel = new JPanel(new GridLayout(5, 2, 5, 5));
+		inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		inputPanel.add(createLabeledComponent("Question Type:", questionType));
 		inputPanel.add(createLabeledComponent("Answer Input:", inputAnswer));
@@ -90,21 +77,25 @@ public class EditView extends JPanel {
 		inputPanel.add(createLabeledComponent("Uncomplete Word:", uncompleteWord));
 		inputPanel.add(createLabeledComponent("Picture URL:", pictureURL));
 
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 10, 10));
-		buttonPanel.add(load);
+		JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
 		buttonPanel.add(newF);
 		buttonPanel.add(save);
+		buttonPanel.add(deleteQuestion);
+		buttonPanel.add(deleteAll);
 		buttonPanel.add(reset);
 		buttonPanel.add(exit);
 
-		JPanel loadQuestionPanel = new JPanel(new BorderLayout());
-		loadQuestionPanel.add(new JLabel("Loaded Questions:"), BorderLayout.NORTH);
+		JPanel loadQuestionPanel = new JPanel(new BorderLayout(10, 10));
+		loadQuestionPanel.setBorder(BorderFactory.createTitledBorder("Loaded Questions"));
 		loadQuestionPanel.add(loadQuestion, BorderLayout.CENTER);
 
+		JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+		centerPanel.add(inputPanel, BorderLayout.CENTER);
+		centerPanel.add(loadQuestionPanel, BorderLayout.EAST);
+
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		add(inputPanel, BorderLayout.CENTER);
+		add(centerPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
-		add(loadQuestionPanel, BorderLayout.EAST);
 	}
 
 	private JPanel createLabeledComponent(String labelText, JComponent component) {
@@ -164,24 +155,31 @@ public class EditView extends JPanel {
 		return newF;
 	}
 
-	public JButton getLoadButton() {
-		return load;
+	public JButton getDeleteQuestionButton() {
+		return deleteQuestion;
 	}
 
-	public JComboBox<String> getLoadQuestionComboBox() {
-		return loadQuestion;
+	public JButton getDeleteAllButton() {
+		return deleteAll;
 	}
 
 	public JButton getResetButton() {
 		return reset;
 	}
 
+	public JComboBox<String> getLoadQuestionComboBox() {
+		return loadQuestion;
+	}
+
 	public void setLoadQuestions(List<QuizQuestion> questions) {
 		loadQuestion.removeAllItems();
-		for(int i = 0; i < questions.size(); i++) {
-			loadQuestion.addItem(questions.get(i).questionExplanation());
+		for (QuizQuestion question : questions) {
+			loadQuestion.addItem(question.questionExplanation());
 		}
 
+		// Ensure the combo box resizes dynamically
+		loadQuestion.setPrototypeDisplayValue("Select a Question...");
+		this.revalidate();
 		this.repaint();
 	}
 }
