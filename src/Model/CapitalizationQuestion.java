@@ -1,20 +1,21 @@
 package Model;
 
 public class CapitalizationQuestion extends QuizQuestion {
-	private String correctAnswer;
+	// When changing name also change in Deserializer!!!
+	private String corrrectSentence;
 
-	public CapitalizationQuestion(String correctAnswer) {
-		this.correctAnswer = correctAnswer;
+	public CapitalizationQuestion(String corrrectSentence) {
+		this.corrrectSentence = corrrectSentence;
 	}
 
 	@Override
 	public boolean validateAnswer(String answer) {
-		return correctAnswer.equals(answer);
+		return corrrectSentence.equals(answer);
 	}
 
 	@Override
 	public String questionExplanation() {
-		return "Tippe diesen Satz ab mit korrekter Groß- und Kleinschreibung: \n" + correctAnswer.toLowerCase();
+		return "Tippe diesen Satz ab mit korrekter Groß- und Kleinschreibung: \n" + corrrectSentence.toLowerCase();
 	}
 
 	@Override
@@ -22,11 +23,8 @@ public class CapitalizationQuestion extends QuizQuestion {
 		return "CapitalizationQuestion";
 	}
 
-	public String getUncompleteWord() {
-		return correctAnswer;
-	}
-
-	public String getRelatedWord() {
-		return correctAnswer;
+	@Override
+	public String getAnswer() {
+		return corrrectSentence;
 	}
 }

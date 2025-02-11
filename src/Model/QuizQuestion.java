@@ -6,4 +6,6 @@ public abstract class QuizQuestion {
 	public abstract String questionExplanation();
 
 	public abstract String getType();
+
+	public abstract String getAnswer();
 }
