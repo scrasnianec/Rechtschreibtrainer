@@ -19,10 +19,9 @@ public class QuizController implements ActionListener {
 		this.quizSet = quizSet;
 		this.quizView = new QuizView(this);
 
-		this.mainMenuController = mainMenuController;
-
 		// Initialize the first question
 		loadNextQuestion();
+		this.mainMenuController = mainMenuController;
 	}
 
 	@Override
@@ -53,13 +52,16 @@ public class QuizController implements ActionListener {
 		if (isCorrect) {
 			quizView.setFeedbackMessage("Correct answer!");
 			quizView.setMessageColor(Color.GREEN);
+
 		} else {
-			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.getAnswer());
 			quizView.setMessageColor(Color.RED);
 		}
 
 		// Load the next question
 		loadNextQuestion();
+
+		// Set the focus to the input field
 		quizView.setFocusToInput();
 	}
 
@@ -68,6 +70,7 @@ public class QuizController implements ActionListener {
 		resetQuizView(); // Clear stale data
 
 		if (currentQuestion != null) {
+			// Handle regular questions
 			if (currentQuestion instanceof PictureQuestion) {
 				PictureQuestion pictureQuestion = (PictureQuestion) currentQuestion;
 				quizView.setPictureQuestion(currentQuestion.questionExplanation(), pictureQuestion.getImageURL());
@@ -75,11 +78,9 @@ public class QuizController implements ActionListener {
 				quizView.setOnlyQuestion(currentQuestion.questionExplanation());
 			}
 		} else {
-			// End of quiz
-			quizView.enableRestartQuizButton();
-			String feedback = "Ende!\nDu hast " + quizSet.calculatePointsEarned() + " von " + QuizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
-			quizView.setOnlyQuestion("");
-
+			// Handle the end of the quiz
+			quizView.getNextButton().setEnabled(false);
+			String feedback = "Ende!\nDu hast " + quizSet.calculatePointsEarned() + " von " + quizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
 			if (quizSet.calculatePointsEarned() == QuizSet.NUM_QUESTIONS_IN_SET) {
 				quizView.setMessageColor(Color.GREEN);
 				feedback += "Perfekt!";
@@ -90,14 +91,15 @@ public class QuizController implements ActionListener {
 				quizView.setMessageColor(Color.ORANGE);
 				feedback += "Nicht schlecht!";
 			}
-
-			quizView.addToFeedbackMessage(feedback);
+			quizView.setFeedbackMessage(feedback);
+			quizView.setPictureURL(null);
 		}
 	}
 
 	private void resetQuizView() {
 		quizView.clearInput();
 		quizView.clearFeedbackMessage();
+        quizView.setPictureURL(null);
 	}
 
 	private void restartQuiz() {
@@ -118,6 +120,8 @@ public class QuizController implements ActionListener {
 	}
 
 	public void stopQuiz() {
+		quizView.clearInput();
+		quizView.clearFeedbackMessage();
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(quizView);
 	}

@@ -3,6 +3,7 @@ package Model;
 import java.net.URL;
 
 public class PictureQuestion extends QuizQuestion {
+	// When changing names also change in Deserializer!!!
 	private String imageURL;
 	private String correctAnswer;
 
@@ -26,6 +27,7 @@ public class PictureQuestion extends QuizQuestion {
 		return "PictureQuestion";
 	}
 
+	@Override
     public String getAnswer() {
 		return correctAnswer;
     }

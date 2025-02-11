@@ -1,19 +1,20 @@
 package Model;
 
 public class CompleteQuestion extends QuizQuestion {
+	// When changing names also change in Deserializer!!!
 	private String relatedWord;
 	private String uncompleteWord;
-	private String answerToCompleteWord;
+	private String correctAnswer;
 
-	public CompleteQuestion(String relatedWord, String uncompleteWord, String answerToCompleteWord) {
+	public CompleteQuestion(String relatedWord, String uncompleteWord, String correctAnswer) {
 		this.relatedWord = relatedWord;
 		this.uncompleteWord = uncompleteWord;
-		this.answerToCompleteWord = answerToCompleteWord;
+		this.correctAnswer = correctAnswer;
 	}
 
 	@Override
 	public boolean validateAnswer(String answer) {
-		return answerToCompleteWord.equals(answer);
+		return correctAnswer.equals(answer);
 	}
 
 	@Override
@@ -26,11 +27,8 @@ public class CompleteQuestion extends QuizQuestion {
 		return "CompleteQuestion";
 	}
 
-	public String getRelatedWord() {
-		return relatedWord;
-	}
-
-	public String getUncompleteWord() {
-		return uncompleteWord;
+	@Override
+	public String getAnswer() {
+		return correctAnswer;
 	}
 }

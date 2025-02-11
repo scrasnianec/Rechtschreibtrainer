@@ -5,6 +5,7 @@ public class SSharpQuestion extends QuizQuestion {
 	private String correctAnswer;
 
 	public SSharpQuestion(String relatedWord, String correctAnswer) {
+		// When changing names also change in Deserializer!!!
 		this.relatedWord = relatedWord;
 		this.correctAnswer = correctAnswer;
 	}
@@ -24,10 +25,7 @@ public class SSharpQuestion extends QuizQuestion {
 		return "SSharpQuestion";
 	}
 
-    public String getRelatedWord() {
-		return relatedWord;
-    }
-
+	@Override
 	public String getAnswer() {
 		return correctAnswer;
 	}

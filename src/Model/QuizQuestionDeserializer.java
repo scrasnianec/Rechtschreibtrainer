@@ -18,7 +18,7 @@ public class QuizQuestionDeserializer implements JsonDeserializer<QuizQuestion> 
         } else if (jsonObject.has("relatedWord")) {
             // It's an SSharpQuestion
             return context.deserialize(jsonObject, SSharpQuestion.class);
-        } else if (jsonObject.has("correctAnswer")) {
+        } else if (jsonObject.has("corrrectSentence")) {
             // It's a CapitalizationQuestion
             return context.deserialize(jsonObject, CapitalizationQuestion.class);
         } else {
