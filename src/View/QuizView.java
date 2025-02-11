@@ -18,14 +18,19 @@ public class QuizView extends JPanel {
 	private JButton exit;
 	private JButton next;
 	private JTextField inputAnswer;
-	private JLabel question;
+
+	// Changed from JLabel to JTextArea:
+	private JTextArea question;
+
 	private JLabel picture;
-	private JLabel loadingLabel; // New label for loading indicator
-	private JLabel feedbackMessage; // New label for feedback messages
+	private JLabel loadingLabel;
+	private JLabel feedbackMessage;
 
 	// Simple image cache
 	private static final Map<URL, ImageIcon> imageCache = new HashMap<>();
-	private BufferedImage originalImage; // To store the original image
+	private BufferedImage originalImage;
+
+	private String errorMessage = "";
 
 	public QuizView(QuizController quizController) {
 		FlatDarkLaf.setup();
@@ -48,35 +53,44 @@ public class QuizView extends JPanel {
 		exit = new JButton("Exit");
 		next = new JButton("Next");
 
-		question = new JLabel("DEBUG", SwingConstants.CENTER);
+		// Initialize JTextArea for the question (with wrapping):
+		question = new JTextArea("DEBUG");
+		question.setFont(new Font("Arial", Font.BOLD, 16));
+		question.setLineWrap(true);
+		question.setWrapStyleWord(true);
+		question.setEditable(false);
+		question.setOpaque(false);  // Make background transparent so it looks like a label
+
 		inputAnswer = new JTextField(20);
+
 		picture = new JLabel();
 		picture.setHorizontalAlignment(SwingConstants.CENTER);
 		picture.setVerticalAlignment(SwingConstants.CENTER);
 
 		loadingLabel = new JLabel("Loading image...", SwingConstants.CENTER);
-		loadingLabel.setVisible(false); // Initially hidden
+		loadingLabel.setVisible(false);
 
-		// Styling components
-		question.setFont(new Font("Arial", Font.BOLD, 16));
+		feedbackMessage = new JLabel("DEBUG", SwingConstants.CENTER);
+		feedbackMessage.setFont(new Font("Arial", Font.BOLD, 14));
 
+		// Optional: style the input field
 		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.GRAY, 1),
 				BorderFactory.createEmptyBorder(2, 2, 2, 2)));
-
-		feedbackMessage = new JLabel("DEBUG", SwingConstants.CENTER); // Initialize feedback message label
-		feedbackMessage.setFont(new Font("Arial", Font.BOLD, 14));
 	}
 
 	private void layoutComponents() {
-		JPanel topPanel = new JPanel(new FlowLayout());
-		topPanel.add(question, BorderLayout.NORTH);
-		topPanel.add(feedbackMessage, BorderLayout.SOUTH); // Add feedback message below the question
+		// Top panel with question text and feedback message
+		JPanel topPanel = new JPanel(new BorderLayout(5, 5));
+		topPanel.add(question, BorderLayout.CENTER);           // Place JTextArea in the center
+		topPanel.add(feedbackMessage, BorderLayout.SOUTH);     // Feedback message below
 
+		// Center panel with image and loading label
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.add(picture, BorderLayout.CENTER);
-		centerPanel.add(loadingLabel, BorderLayout.SOUTH); // Add loading label below the picture
+		centerPanel.add(loadingLabel, BorderLayout.SOUTH);
 
+		// Bottom panel with input field and buttons
 		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
 		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
 
@@ -86,6 +100,7 @@ public class QuizView extends JPanel {
 
 		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+		// Add panels to the main panel
 		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
@@ -100,41 +115,40 @@ public class QuizView extends JPanel {
 		return inputAnswer.getText();
 	}
 
-	/**
-	 * Asynchronously loads and sets an image from the provided URL.
-	 * If the URL is null, hides the picture component.
-	 *
-	 * @param url The URL of the image to load.
-	 */
 	public void setPictureURL(String url) {
-		// Hide picture and loading label if no URL is provided
 		if (url == null || url.isEmpty()) {
 			picture.setVisible(false);
 			loadingLabel.setVisible(false);
 			return;
 		}
 
-		// Clear any existing image
 		picture.setIcon(null);
 		loadingLabel.setVisible(false);
-		originalImage = null; // Reset original image
+		originalImage = null;
 
-		picture.setVisible(true); // Show picture space if URL is provided
-		loadingLabel.setVisible(true); // Show loading indicator
+		picture.setVisible(true);
+		loadingLabel.setVisible(true);
 
-		if (imageCache.containsKey(url)) {
-			// Use cached image
-			picture.setIcon(imageCache.get(url));
+		// Check cache
+		try {
+			URL imageUrl = new URL(url);
+			if (imageCache.containsKey(imageUrl)) {
+				picture.setIcon(imageCache.get(imageUrl));
+				loadingLabel.setVisible(false);
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			picture.setText("Failed to load image.");
 			loadingLabel.setVisible(false);
 			return;
 		}
 
-		// Use SwingWorker to load the image in the background
+		// Load image in the background
 		new SwingWorker<BufferedImage, Void>() {
 			@Override
 			protected BufferedImage doInBackground() throws Exception {
 				try {
-					// Read the image from the URL
 					return ImageIO.read(new URL(url));
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -147,12 +161,11 @@ public class QuizView extends JPanel {
 				try {
 					originalImage = get();
 					if (originalImage != null) {
-						// Scale the image to fit the label while maintaining aspect ratio
 						Image scaledImage = getScaledImage(originalImage, picture.getWidth(), picture.getHeight());
-						ImageIcon imageIcon = new ImageIcon(scaledImage);
-						picture.setIcon(imageIcon);
-						// Cache the loaded image
-						imageCache.put(new URL(url), imageIcon);
+						ImageIcon icon = new ImageIcon(scaledImage);
+						picture.setIcon(icon);
+						// Cache
+						imageCache.put(new URL(url), icon);
 					} else {
 						picture.setText("Image not available.");
 					}
@@ -165,7 +178,7 @@ public class QuizView extends JPanel {
 			}
 		}.execute();
 
-		// Add a component listener to handle resizing
+		// Handle resizing
 		picture.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -177,14 +190,6 @@ public class QuizView extends JPanel {
 		});
 	}
 
-	/**
-	 * Scales an image to fit within the specified width and height while maintaining aspect ratio.
-	 *
-	 * @param srcImg The source BufferedImage.
-	 * @param maxWidth The maximum width.
-	 * @param maxHeight The maximum height.
-	 * @return The scaled Image.
-	 */
 	private Image getScaledImage(BufferedImage srcImg, int maxWidth, int maxHeight) {
 		int srcWidth = srcImg.getWidth();
 		int srcHeight = srcImg.getHeight();
@@ -194,7 +199,7 @@ public class QuizView extends JPanel {
 		double scale = Math.min(widthRatio, heightRatio);
 
 		if (scale > 1.0) {
-			scale = 1.0; // Don't scale up images
+			scale = 1.0; // don't scale up images
 		}
 
 		int newWidth = (int) (srcWidth * scale);
@@ -204,19 +209,17 @@ public class QuizView extends JPanel {
 	}
 
 	public void setOnlyQuestion(String questionText) {
-		// Set the question text
 		question.setText(questionText);
 		feedbackMessage.setText(errorMessage);
 
-		// Update layout for only question display
-		removeAll(); // Clear existing components
+		removeAll();
 
-		// Add question to the center of the BorderLayout
+		// Show question + feedback in the center
 		JPanel centerPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		centerPanel.add(question, BorderLayout.NORTH); // Center the question
-		centerPanel.add(feedbackMessage, BorderLayout.SOUTH); // Add feedback message below the question
+		centerPanel.add(question);       // Our JTextArea
+		centerPanel.add(feedbackMessage);
 
-		// Add input and buttons at the bottom
+		// Bottom panel with input and buttons
 		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
 		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
 
@@ -225,35 +228,31 @@ public class QuizView extends JPanel {
 		buttonPanel.add(exit);
 		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		// Re-add panels to the layout
 		add(centerPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
 
-		// Refresh UI
 		revalidate();
 		repaint();
 	}
 
 	public void setPictureQuestion(String questionText, String imageURL) {
-		// Set the question text
 		question.setText(questionText);
 		feedbackMessage.setText(errorMessage);
 
-		// Update layout for question and picture
-		removeAll(); // Clear existing components
+		removeAll();
 
 		JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		topPanel.add(question, BorderLayout.NORTH); // Question at the top
-		topPanel.add(feedbackMessage, BorderLayout.SOUTH); // Feedback message below the question
+		topPanel.add(question);
+		topPanel.add(feedbackMessage);
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
 		centerPanel.add(picture, BorderLayout.CENTER);
-		centerPanel.add(loadingLabel, BorderLayout.SOUTH); // Add loading label below picture
+		centerPanel.add(loadingLabel, BorderLayout.SOUTH);
 
 		// Set picture from URL
 		setPictureURL(imageURL);
 
-		// Add input and buttons at the bottom
+		// Bottom panel with input and buttons
 		JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
 		bottomPanel.add(new JPanel(new FlowLayout()).add(inputAnswer), BorderLayout.CENTER);
 
@@ -262,16 +261,13 @@ public class QuizView extends JPanel {
 		buttonPanel.add(exit);
 		bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		// Re-add panels to the layout
 		add(topPanel, BorderLayout.NORTH);
 		add(centerPanel, BorderLayout.CENTER);
 		add(bottomPanel, BorderLayout.SOUTH);
 
-		// Refresh UI
 		revalidate();
 		repaint();
 	}
-
 
 	public JButton getExitButton() {
 		return exit;
@@ -289,13 +285,15 @@ public class QuizView extends JPanel {
 		inputAnswer.setText("");
 	}
 
-	private String errorMessage = "";
-
 	public void setFeedbackMessage(String message) {
 		feedbackMessage.setText(message);
-		errorMessage = message; // Keep the variable for debugging purposes, if needed
+		errorMessage = message;
 		revalidate();
-		repaint(); // Ensure the UI reflects changes
+		repaint();
+	}
+
+	public void addToFeedbackMessage(String message) {
+		feedbackMessage.setText(feedbackMessage.getText() + "\n" + message);
 	}
 
 	public void setMessageColor(Color color) {
@@ -310,4 +308,13 @@ public class QuizView extends JPanel {
 		inputAnswer.requestFocus();
 	}
 
+	public void enableRestartQuizButton() {
+		next.setText("Restart Quiz");
+		next.setActionCommand("RESTART_QUIZ");
+	}
+
+	public void resetNextButton() {
+		next.setText("Next");
+		next.setActionCommand("NEXT");
+	}
 }
