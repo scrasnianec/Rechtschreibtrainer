@@ -79,8 +79,11 @@ public class QuizController implements ActionListener {
 			}
 		} else {
 			// Handle the end of the quiz
-			quizView.getNextButton().setEnabled(false);
 			String feedback = "Ende!\nDu hast " + quizSet.calculatePointsEarned() + " von " + quizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
+			quizView.getInputAnswerField().setEnabled(false);
+			quizView.enableRestartQuizButton();
+			quizView.setOnlyQuestion("");
+
 			if (quizSet.calculatePointsEarned() == QuizSet.NUM_QUESTIONS_IN_SET) {
 				quizView.setMessageColor(Color.GREEN);
 				feedback += "Perfekt!";

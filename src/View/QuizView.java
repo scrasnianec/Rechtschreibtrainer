@@ -5,6 +5,9 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -20,7 +23,8 @@ public class QuizView extends JPanel {
 	private JTextField inputAnswer;
 
 	// Changed from JLabel to JTextArea:
-	private JTextArea question;
+	private JTextPane question;
+
 
 	private JLabel picture;
 	private JLabel loadingLabel;
@@ -52,14 +56,21 @@ public class QuizView extends JPanel {
 	private void initializeComponents() {
 		exit = new JButton("Exit");
 		next = new JButton("Next");
-
-		// Initialize JTextArea for the question (with wrapping):
-		question = new JTextArea("DEBUG");
-		question.setFont(new Font("Arial", Font.BOLD, 16));
-		question.setLineWrap(true);
-		question.setWrapStyleWord(true);
+		// Initialize JTextPane for the question with center alignment:
+		question = new JTextPane();question = new JTextPane();
 		question.setEditable(false);
-		question.setOpaque(false);  // Make background transparent so it looks like a label
+		question.setOpaque(false);
+
+		StyledDocument doc = question.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+		question.setFont(new Font("Arial", Font.BOLD, 16));
+		question.setText("DEBUG");
+		question.setEditable(false);
+		question.setOpaque(false);
+		question.setFont(new Font("Arial", Font.BOLD, 16));
 
 		inputAnswer = new JTextField(20);
 
@@ -216,7 +227,7 @@ public class QuizView extends JPanel {
 
 		// Show question + feedback in the center
 		JPanel centerPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		centerPanel.add(question);       // Our JTextArea
+		centerPanel.add(question, BorderLayout.CENTER);       // Our JTextArea
 		centerPanel.add(feedbackMessage);
 
 		// Bottom panel with input and buttons
@@ -242,7 +253,7 @@ public class QuizView extends JPanel {
 		removeAll();
 
 		JPanel topPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-		topPanel.add(question);
+		topPanel.add(question, BorderLayout.CENTER);
 		topPanel.add(feedbackMessage);
 
 		JPanel centerPanel = new JPanel(new BorderLayout(5, 5));
