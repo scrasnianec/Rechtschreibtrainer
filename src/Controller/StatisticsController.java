@@ -60,8 +60,11 @@ public class StatisticsController implements ActionListener {
 	}
 
 	private int calculateFailures() {
-		// Assume failures are negative entries in the point history
-		return (int) userInfo.getPointHistory().stream().filter(points -> points < 0).count();
+		// Now, assume failures are 0-point entries in the point history
+		return (int) userInfo.getPointHistory()
+				.stream()
+				.filter(points -> points == 0)
+				.count();
 	}
 
 	private int calculateSuccessRate() {
