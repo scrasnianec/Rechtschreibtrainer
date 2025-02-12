@@ -54,7 +54,7 @@ public class QuizController implements ActionListener {
 			quizView.setMessageColor(Color.GREEN);
 
 		} else {
-			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.questionExplanation());
+			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.getAnswer());
 			quizView.setMessageColor(Color.RED);
 		}
 
@@ -107,9 +107,10 @@ public class QuizController implements ActionListener {
 
 	private void restartQuiz() {
 		quizView.setFeedbackMessage("");
-		quizSet = new QuizSet(); // Reset quiz set
-		quizView.resetNextButton(); // Reset button to "Next"
-		loadNextQuestion(); // Load first question of new quiz
+		quizView.getInputAnswerField().setEnabled(true);
+		quizSet = new QuizSet();
+		quizView.resetNextButton();
+		loadNextQuestion();
 	}
 
 	private void handleExitAction() {

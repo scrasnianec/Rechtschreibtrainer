@@ -5,6 +5,9 @@ import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -19,8 +22,8 @@ public class GameView extends JPanel {
 	private JButton exit;
 	private JButton next;
 	private JTextField inputAnswer;
-	private JLabel question;
-	private JLabel feedbackMessage;
+	private JTextPane question;
+	private JTextPane feedbackMessage;
 
 	// Components for picture questions (optional)
 	private JLabel picture;
@@ -59,11 +62,25 @@ public class GameView extends JPanel {
 		exit = new JButton("Exit");
 		next = new JButton("Next");
 
-		question = new JLabel("Question", SwingConstants.CENTER);
+		// Question label
+		question = new JTextPane();
+		question.setEditable(false);
+		question.setOpaque(false);
 		question.setFont(new Font("Arial", Font.BOLD, 16));
 
-		feedbackMessage = new JLabel("", SwingConstants.CENTER);
-		feedbackMessage.setFont(new Font("Arial", Font.BOLD, 14));
+		StyledDocument docQuestion = question.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		docQuestion.setParagraphAttributes(0, docQuestion.getLength(), center, false);
+
+		// Feedback message label
+		feedbackMessage = new JTextPane();
+		feedbackMessage.setEditable(false);
+		feedbackMessage.setOpaque(false);
+		feedbackMessage.setFont(new Font("Arial", Font.BOLD, 16));
+
+		StyledDocument docFeedback = feedbackMessage.getStyledDocument();
+		docFeedback.setParagraphAttributes(0, docFeedback.getLength(), center, false);
 
 		inputAnswer = new JTextField(20);
 		inputAnswer.setBorder(BorderFactory.createCompoundBorder(
