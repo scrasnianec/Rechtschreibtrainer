@@ -65,9 +65,17 @@ public class QuizController implements ActionListener {
 		quizView.setFocusToInput();
 	}
 
+	boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
 		resetQuizView(); // Clear stale data
+
+		if(currentQuestion instanceof PictureQuestion && first) {
+			loadNextQuestion();
+			return;
+		}
+
+		first = false;
 
 		if (currentQuestion != null) {
 			// Handle regular questions
