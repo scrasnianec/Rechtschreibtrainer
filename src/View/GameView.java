@@ -246,6 +246,17 @@ public class GameView extends JPanel {
 	public JButton getNextButton() {
 		return next;
 	}
+	public JTextField getInputField() {
+		return inputAnswer;
+	}
+	public void enableRestartQuizButton() {
+		next.setText("Restart Quiz");
+		next.setActionCommand("RESTART_QUIZ");
+	}
+	public void resetNextButton() {
+		next.setText("Next");
+		next.setActionCommand("NEXT");
+	}
 
 	// --- Methods for Hangman ---
 	public void addHangmanStep() {

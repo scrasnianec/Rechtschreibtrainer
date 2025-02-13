@@ -134,6 +134,7 @@ public class QuizController implements ActionListener {
 	public void stopQuiz() {
 		quizView.clearInput();
 		quizView.clearFeedbackMessage();
+		quizView.resetNextButton();
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(quizView);
 	}
