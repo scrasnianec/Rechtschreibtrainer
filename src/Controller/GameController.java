@@ -73,8 +73,16 @@ public class GameController implements ActionListener {
 		gameView.setFocusToInput();
 	}
 
+	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromFile();
+
+		if(currentQuestion instanceof PictureQuestion && first) {
+			loadNextQuestion();
+			return;
+		}
+
+		first = false;
 
 		if (currentQuestion != null) {
 			if (currentQuestion instanceof PictureQuestion) {

@@ -73,7 +73,7 @@ public class EditController implements ActionListener {
 		QuizQuestion question = null;
 		switch (type) {
 			case "Completion":
-				question = new CompleteQuestion(relatedWord, uncompleteWord, answer);
+				question = new CompleteQuestion(uncompleteWord, answer);
 				break;
 			case "Capitalization":
 				question = new CapitalizationQuestion(answer);

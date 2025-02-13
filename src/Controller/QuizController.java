@@ -65,7 +65,7 @@ public class QuizController implements ActionListener {
 		quizView.setFocusToInput();
 	}
 
-	boolean first = true;
+	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
 		resetQuizView(); // Clear stale data

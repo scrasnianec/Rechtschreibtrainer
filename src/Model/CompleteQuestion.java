@@ -2,12 +2,10 @@ package Model;
 
 public class CompleteQuestion extends QuizQuestion {
 	// When changing names also change in Deserializer!!!
-	private String relatedWord;
 	private String uncompleteWord;
 	private String correctAnswer;
 
-	public CompleteQuestion(String relatedWord, String uncompleteWord, String correctAnswer) {
-		this.relatedWord = relatedWord;
+	public CompleteQuestion(String uncompleteWord, String correctAnswer) {
 		this.uncompleteWord = uncompleteWord;
 		this.correctAnswer = correctAnswer;
 	}
@@ -19,7 +17,7 @@ public class CompleteQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Vervollständige die verwandten Wörter. (Beachte die Rechtschreibung): " + uncompleteWord;
+		return "Vervollständige die verwandten Wörter.\n(Beachte die Rechtschreibung):\n" + uncompleteWord;
 	}
 
 	@Override

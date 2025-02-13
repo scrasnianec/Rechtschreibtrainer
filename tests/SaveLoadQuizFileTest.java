@@ -23,7 +23,7 @@ class SaveLoadQuizFileTest {
         // Prepare sample data
         List<QuizQuestion> questions = new ArrayList<>();
         questions.add(new CapitalizationQuestion("Correct Answer"));
-        questions.add(new CompleteQuestion("hören", "geh__", "Gehör"));
+        questions.add(new CompleteQuestion("geh__", "Gehör"));
         questions.add(new PictureQuestion("http://example.com/image.jpg", "Katze"));
         questions.add(new SSharpQuestion("essen", "aß"));
         saveLoadQuizFile.saveQuestions(questions);
@@ -52,7 +52,7 @@ class SaveLoadQuizFileTest {
     void testSaveQuestions() {
         // Prepare sample data
         List<QuizQuestion> questions = new ArrayList<>();
-        questions.add(new CompleteQuestion("related", "uncomplete", "complete"));
+        questions.add(new CompleteQuestion("uncomplete", "complete"));
 
         // Save the questions
         saveLoadQuizFile.saveQuestions(questions);
