@@ -20,10 +20,9 @@ public class MockQuizFileCreator {
         mockQuestions.add(new CapitalizationQuestion("Java ist eine objektorientierte Programmiersprache."));
         mockQuestions.add(new CapitalizationQuestion("Die Hauptstadt von Deutschland ist Berlin."));
 
-        mockQuestions.add(new CompleteQuestion("Auto", "A___", "Auto"));
-        mockQuestions.add(new CompleteQuestion("Baum", "B__m", "Baum"));
-        mockQuestions.add(new CompleteQuestion("Hund", "H__d", "Hund"));
-        mockQuestions.add(new CompleteQuestion("Blume", "Blu__", "Blume"));
+        mockQuestions.add(new CompleteQuestion("der Wettlauf – die ________", "Wettläufe"));
+        mockQuestions.add(new CompleteQuestion("das Band – zwei _______", "Bänder"));
+        mockQuestions.add(new CompleteQuestion("die Maus – mehrere _______", "Mäuse"));
 
         mockQuestions.add(new PictureQuestion("https://as2.ftcdn.net/v2/jpg/02/71/09/23/1000_F_271092321_KWzz3JmciFYtzJRyTJE5ZMKSu4p1ATrK.jpg", "Hund"));
         mockQuestions.add(new PictureQuestion("https://thumbs.dreamstime.com/b/mountain-10204465.jpg", "Berg"));

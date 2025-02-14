@@ -15,7 +15,7 @@ public class CapitalizationQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Tippe diesen Satz ab mit korrekter Groß- und Kleinschreibung: \n" + corrrectSentence.toLowerCase();
+		return "Schreibe diesen Satz mit korrekter Groß- und Kleinschreibung ab:\n" + corrrectSentence.toLowerCase();
 	}
 
 	@Override

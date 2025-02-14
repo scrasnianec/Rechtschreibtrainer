@@ -65,7 +65,7 @@ public class QuizController implements ActionListener {
 		quizView.setFocusToInput();
 	}
 
-	boolean first = true;
+	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
 		resetQuizView(); // Clear stale data
@@ -134,6 +134,7 @@ public class QuizController implements ActionListener {
 	public void stopQuiz() {
 		quizView.clearInput();
 		quizView.clearFeedbackMessage();
+		quizView.resetNextButton();
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(quizView);
 	}

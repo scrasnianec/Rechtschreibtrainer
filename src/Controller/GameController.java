@@ -35,7 +35,10 @@ public class GameController implements ActionListener {
 				handleNextAction();
 				break;
 			case "EXIT":
-				stopGame();
+				exitGame();
+				break;
+			case "RESTART_QUIZ":
+				restartQuiz();
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
@@ -45,7 +48,7 @@ public class GameController implements ActionListener {
 	private void handleNextAction() {
 		String userAnswer = gameView.getAnswerInput();
 		boolean isCorrect = currentQuestion.validateAnswer(userAnswer);
-
+		quizSet.addHistoryEntry(isCorrect);
 
 		if (isCorrect) {
 			gameView.setFeedbackMessage("Correct answer!");
@@ -56,11 +59,12 @@ public class GameController implements ActionListener {
 			wrongAnswersCount++;
 			gameView.addHangmanStep();
 			if (wrongAnswersCount >= MAX_WRONG) {
-				JOptionPane.showMessageDialog(gameView,
-						"Game Over! You have reached the maximum number of wrong answers.",
-						"Game Over",
-						JOptionPane.INFORMATION_MESSAGE);
-				stopGame();
+				// end of game
+				String feedback = "Game Over!\nDu hast " + quizSet.calculatePointsEarned() + " Fragen richtig beantwortet.\n";
+				gameView.setFeedbackMessage(feedback);
+				gameView.getInputField().setEnabled(false);
+				gameView.enableRestartQuizButton();
+				gameView.setOnlyQuestion("");
 				return;
 			}
 		}
@@ -69,8 +73,16 @@ public class GameController implements ActionListener {
 		gameView.setFocusToInput();
 	}
 
+	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromFile();
+
+		if(currentQuestion instanceof PictureQuestion && first) {
+			loadNextQuestion();
+			return;
+		}
+
+		first = false;
 
 		if (currentQuestion != null) {
 			if (currentQuestion instanceof PictureQuestion) {
@@ -85,23 +97,31 @@ public class GameController implements ActionListener {
 					"No more questions available.",
 					"Information",
 					JOptionPane.INFORMATION_MESSAGE);
-			stopGame();
+			exitGame();
 		}
 	}
 
 	public void startGame() {
-		wrongAnswersCount = 0;
-		gameView.resetHangman();
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(gameView);
 		gameView.setVisible(true);
-	}
-
-	public void stopGame() {
+		wrongAnswersCount = 0;
+		gameView.resetHangman();
+		gameView.resetNextButton();
 		gameView.clearInput();
 		gameView.clearFeedbackMessage();
 		gameView.setPictureURL(null);
+	}
+
+	public void exitGame() {
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(gameView);
+	}
+
+	private void restartQuiz() {
+		gameView.setFeedbackMessage("");
+		gameView.getInputField().setEnabled(true);
+		startGame();
+		loadNextQuestion();
 	}
 }

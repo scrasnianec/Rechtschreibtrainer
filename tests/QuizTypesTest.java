@@ -14,7 +14,7 @@ public class QuizTypesTest {
 
     @Test
     void testCompleteQuestion() {
-        CompleteQuestion question = new CompleteQuestion("Haus", "H_us", "Haus");
+        CompleteQuestion question = new CompleteQuestion("H_us", "Haus");
         assertTrue(question.validateAnswer("Haus"));
         assertFalse(question.validateAnswer("Maus"));
         assertEquals("Ergänzen Sie das unvollständige Wort korrekt, basierend auf das verwandte Wort: Haus", question.questionExplanation());

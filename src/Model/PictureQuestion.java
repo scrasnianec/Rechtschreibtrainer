@@ -19,7 +19,7 @@ public class PictureQuestion extends QuizQuestion {
 
 	@Override
 	public String questionExplanation() {
-		return "Was ist in diesem Bild zu sehen? (Beachte die Rechtschreibung)";
+		return "Was ist in diesem Bild zu sehen?\n(Beachte die Rechtschreibung)";
 	}
 
 	@Override
