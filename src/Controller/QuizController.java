@@ -40,13 +40,13 @@ public class QuizController implements ActionListener {
 				break;
 			default:
 				throw new UnsupportedOperationException("Unknown command: " + command);
+
 		}
 	}
 
 	private void handleNextAction() {
 		String userAnswer = quizView.getAnswerInput();
 		boolean isCorrect = currentQuestion.validateAnswer(userAnswer);
-
 		// Update the quiz history and provide feedback
 		quizSet.addHistoryEntry(isCorrect);
 		if (isCorrect) {

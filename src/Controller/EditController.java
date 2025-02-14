@@ -50,8 +50,16 @@ public class EditController implements ActionListener {
 				break;
 			case "RESET":
 				QuizReset.resetQuizFile();
-				JOptionPane.showMessageDialog(editView, "Quiz file reset successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+				try {
+					List<QuizQuestion> questions = loadExistingQuestions();
+					editView.setLoadQuestions(questions);
+					JOptionPane.showMessageDialog(editView, "Quiz file reset successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(editView, "Error resetting quiz file.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
+
 			case "DELETE_QUESTION":
 				deleteSelectedQuestion();
 				break;
@@ -116,6 +124,12 @@ public class EditController implements ActionListener {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(editView, "Error deleting question.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		try {
+			List<QuizQuestion> questions = loadExistingQuestions();
+			editView.setLoadQuestions(questions);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void deleteAllQuestions() {
@@ -135,6 +149,12 @@ public class EditController implements ActionListener {
 				ex.printStackTrace();
 				JOptionPane.showMessageDialog(editView, "Error deleting all questions.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+		}
+		try {
+			List<QuizQuestion> questions = loadExistingQuestions();
+			editView.setLoadQuestions(questions);
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 
