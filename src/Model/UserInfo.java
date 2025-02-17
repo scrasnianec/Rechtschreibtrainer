@@ -49,30 +49,47 @@ public class UserInfo implements Serializable {
 		this.totalPoints += points;
 		this.pointHistory.add(points); // Add to point history
 		saveUserInfo();
-	}
-
-	public int getLevel() {
-		return (int) Math.floor(Math.log(totalPoints) / Math.log(2));
+		System.out.println(this.pointHistory.toString());
 	}
 
 	public int getTotalPoints() {
 		return totalPoints;
 	}
 
-	public int percentToNextLevel() {
-		int currentLevel = getLevel();
-		int currentLevelPoints = (int) Math.pow(2, currentLevel); // Points at the start of the current level
-		int nextLevelPoints = (int) Math.pow(2, currentLevel + 1); // Points required to reach the next level
-
-		// Points accumulated within the current level
-		int pointsInCurrentLevel = totalPoints - currentLevelPoints;
-
-		// Total points required to progress to the next level
-		int pointsToNextLevel = nextLevelPoints - currentLevelPoints;
-
-		// Calculate percentage progress
-		return (int) ((pointsInCurrentLevel / (double) pointsToNextLevel) * 100);
+	public int getLevel() {
+		if (totalPoints == 0) return 0; // Avoid division by zero
+		if (totalPoints < 38) {
+			return (int) Math.floor(Math.log(totalPoints) / Math.log(2));
+		} else {
+			double a = 20.0;
+			double b = 1.13;
+			return (int) Math.floor(Math.log(totalPoints / a) / Math.log(b));
+		}
 	}
+
+	public int percentToNextLevel() {
+		if (totalPoints == 0) return 0; // Avoid division by zero
+		int currentLevel = getLevel();
+
+		if (totalPoints < 38) {
+			// For totalPoints < 38, using the base-2 formula:
+			int currentLevelPoints = (int) Math.pow(2, currentLevel);
+			int nextLevelPoints = (int) Math.pow(2, currentLevel + 1);
+			int pointsInCurrentLevel = totalPoints - currentLevelPoints;
+			int pointsToNextLevel = nextLevelPoints - currentLevelPoints;
+			return (int) ((pointsInCurrentLevel / (double) pointsToNextLevel) * 100);
+		} else {
+			// For totalPoints >= 38, using the 'a' and 'b' formula:
+			double a = 20.0;
+			double b = 1.13;
+			double currentLevelPoints = a * Math.pow(b, currentLevel);
+			double nextLevelPoints = a * Math.pow(b, currentLevel + 1);
+			double pointsInCurrentLevel = totalPoints - currentLevelPoints;
+			double pointsToNextLevel = nextLevelPoints - currentLevelPoints;
+			return (int) ((pointsInCurrentLevel / pointsToNextLevel) * 100);
+		}
+	}
+
 
 	public List<Integer> getPointHistory() {
 		return new ArrayList<>(pointHistory); // Return a copy to preserve encapsulation
