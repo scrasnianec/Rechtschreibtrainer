@@ -49,18 +49,35 @@ public class QuizSet {
 	}
 
 	public void addHistoryEntry(boolean entry) {
-		// Example assumes fixed size history array
 		for (int i = setHistory.length - 1; i > 0; i--) {
 			setHistory[i] = setHistory[i - 1];
 		}
 		setHistory[0] = entry;
 	}
 
-	public int calculatePointsEarned() {
+	public void clearHistory() {
+		for (int i = 0; i < setHistory.length; i++) {
+			setHistory[i] = false;
+		}
+	}
+
+	public int calculatePointsEarnedInQuiz() {
 		int points = 0;
 		for (boolean entry : setHistory) {
-			if (entry) points += 1;
+			if (entry) points += 5;
 		}
 		return points;
+	}
+
+	public int calculatePointsEarnedInGame() {
+		return calculatePointsEarnedInQuiz() / 5;
+	}
+
+	public int calculateCorrectRounds() {
+		int correctRounds = 0;
+		for (boolean entry : setHistory) {
+			if (entry) correctRounds++;
+		}
+		return correctRounds;
 	}
 }

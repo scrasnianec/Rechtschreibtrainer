@@ -3,6 +3,7 @@ package Controller;
 import Model.PictureQuestion;
 import Model.QuizSet;
 import Model.QuizQuestion;
+import Model.UserInfo;
 import View.QuizView;
 
 import java.awt.*;
@@ -33,7 +34,7 @@ public class QuizController implements ActionListener {
 				handleNextAction();
 				break;
 			case "EXIT":
-				handleExitAction();
+				exitQuiz();
 				break;
 			case "RESTART_QUIZ":
 				restartQuiz();
@@ -47,7 +48,6 @@ public class QuizController implements ActionListener {
 	private void handleNextAction() {
 		String userAnswer = quizView.getAnswerInput();
 		boolean isCorrect = currentQuestion.validateAnswer(userAnswer);
-		// Update the quiz history and provide feedback
 		quizSet.addHistoryEntry(isCorrect);
 		if (isCorrect) {
 			quizView.setFeedbackMessage("Correct answer!");
@@ -57,25 +57,13 @@ public class QuizController implements ActionListener {
 			quizView.setFeedbackMessage("Incorrect. Correct answer: " + currentQuestion.getAnswer());
 			quizView.setMessageColor(Color.RED);
 		}
-
-		// Load the next question
+		quizView.clearInput();
 		loadNextQuestion();
-
-		// Set the focus to the input field
 		quizView.setFocusToInput();
 	}
 
-	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromSet();
-		resetQuizView(); // Clear stale data
-
-		if(currentQuestion instanceof PictureQuestion && first) {
-			loadNextQuestion();
-			return;
-		}
-
-		first = false;
 
 		if (currentQuestion != null) {
 			// Handle regular questions
@@ -87,59 +75,50 @@ public class QuizController implements ActionListener {
 			}
 		} else {
 			// Handle the end of the quiz
-			String feedback = "Ende!\nDu hast " + quizSet.calculatePointsEarned() + " von " + quizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
+			int correctRounds = quizSet.calculateCorrectRounds();
+			String feedback = "Ende!\nDu hast " + correctRounds + " von " + quizSet.NUM_QUESTIONS_IN_SET + " Fragen richtig beantwortet.\n";
 			quizView.getInputAnswerField().setEnabled(false);
 			quizView.enableRestartQuizButton();
 			quizView.setOnlyQuestion("");
 
-			if (quizSet.calculatePointsEarned() == QuizSet.NUM_QUESTIONS_IN_SET) {
+			if (correctRounds == QuizSet.NUM_QUESTIONS_IN_SET) {
 				quizView.setMessageColor(Color.GREEN);
 				feedback += "Perfekt!";
-			} else if (quizSet.calculatePointsEarned() == 0) {
+			} else if (correctRounds == 0) {
 				quizView.setMessageColor(Color.RED);
 				feedback += "Das war leider nix!";
 			} else {
 				quizView.setMessageColor(Color.ORANGE);
 				feedback += "Nicht schlecht!";
 			}
+			new UserInfo().addPoints(quizSet.calculatePointsEarnedInQuiz());
 			quizView.setFeedbackMessage(feedback);
 			quizView.setPictureURL(null);
 		}
 	}
 
-	private void resetQuizView() {
-		quizView.clearInput();
-		quizView.clearFeedbackMessage();
-        quizView.setPictureURL(null);
-	}
-
-	private void restartQuiz() {
-		quizView.setFeedbackMessage("");
-		quizView.getInputAnswerField().setEnabled(true);
-		quizSet = new QuizSet();
-		quizView.resetNextButton();
-		loadNextQuestion();
-	}
-
-	private void handleExitAction() {
-		stopQuiz();
-	}
-
-	public void openQuiz() {
+	public void startQuiz() {
+		restartQuiz();
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(quizView);
 		quizView.setVisible(true);
 	}
 
-	public void stopQuiz() {
-		quizView.clearInput();
-		quizView.clearFeedbackMessage();
-		quizView.resetNextButton();
+	public void exitQuiz() {
 		mainMenuController.showMainMenu();
 		mainMenuController.removePanel(quizView);
 	}
 
-	public QuizView getView() {
-		return quizView;
+	private void restartQuiz() {
+		quizSet = new QuizSet();
+
+		loadNextQuestion();
+
+		quizView.clearInput();
+		quizView.clearFeedbackMessage();
+		quizView.resetNextButton();
+		quizView.setFeedbackMessage("");
+		quizView.getInputAnswerField().setEnabled(true);
+		quizView.resetNextButton();
 	}
 }

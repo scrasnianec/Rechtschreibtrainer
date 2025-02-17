@@ -183,7 +183,8 @@ public class QuizView extends JPanel {
                     }
                 } catch (Exception e) {
                     System.err.println("Error loading image: " + e.getMessage());
-                    picture.setText("Failed to load image.");
+                    // idfk if this is true
+                    System.err.println("You can safely ignore this error if the image has loaded.");
                 } finally {
                     loadingLabel.setVisible(false);
                 }

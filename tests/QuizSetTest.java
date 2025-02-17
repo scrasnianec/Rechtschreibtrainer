@@ -42,8 +42,8 @@ public class QuizSetTest {
         quizSet.addHistoryEntry(false);
         quizSet.addHistoryEntry(true);
         // Keine direkte Methode zum Testen von setHistory, aber wir können calculatePointsEarned testen
-        int points = quizSet.calculatePointsEarned();
-        assertEquals(2, points, "Die Punkteberechnung sollte 2 betragen (2x true = 2 Punkte).");
+        int points = quizSet.calculatePointsEarnedInQuiz();
+        assertEquals(10, points, "Die Punkteberechnung sollte 2 betragen (2x true = 2 Punkte).");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class QuizSetTest {
         quizSet.addHistoryEntry(true);
         quizSet.addHistoryEntry(false);
         quizSet.addHistoryEntry(false);
-        int points = quizSet.calculatePointsEarned();
-        assertEquals(2, points, "Die Punkteberechnung sollte 2 betragen (2x true = 2 Punkte).");
+        int points = quizSet.calculatePointsEarnedInQuiz();
+        assertEquals(10, points, "Die Punkteberechnung sollte 2 betragen (2x true = 2 Punkte).");
     }
 }

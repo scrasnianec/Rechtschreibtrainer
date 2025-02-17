@@ -13,11 +13,9 @@ public class StatisticsController implements ActionListener {
 	private MainMenuController mainMenuController;
 
 
-	public StatisticsController(UserInfo userInfo, MainMenuController mainMenuController) {
+	public StatisticsController(MainMenuController mainMenuController) {
 		statisticsView = new StatisticsView();
-		this.userInfo = userInfo;
 
-		// Initialize the view with data from the model
 		updateStatisticsView();
 
 		// Register event listeners
@@ -40,7 +38,7 @@ public class StatisticsController implements ActionListener {
 	}
 
 	private void updateStatisticsView() {
-		// Update the view with statistics data from the UserInfo model
+		userInfo = new UserInfo();
 		statisticsView.setAveragePointsPerChallange(calculateAveragePoints());
 		statisticsView.setMaxPointsForChallange(calculateMaxPoints());
 		statisticsView.setTotalChallangeCount(userInfo.getPointHistory().size());
@@ -93,6 +91,7 @@ public class StatisticsController implements ActionListener {
 	public void startStatistics() {
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(statisticsView);
+		updateStatisticsView();
 		statisticsView.setVisible(true);
 	}
 

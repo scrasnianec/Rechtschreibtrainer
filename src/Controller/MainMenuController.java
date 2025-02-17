@@ -17,16 +17,16 @@ public class MainMenuController implements ActionListener {
 	private QuizController quizController;
 	private GameController gameController;
 	private UserInfo userInfo;
-	SaveLoadQuizFile save;
+	private SaveLoadQuizFile save;
 
 	public Frame frame;
 
 	public MainMenuController(Frame frame) {
 		this.frame = frame;
 
-		userInfo = new UserInfo();
 		mainMenuView = new MainMenuView();
-		statisticsController = new StatisticsController(userInfo, this);
+		save = new SaveLoadQuizFile();
+		statisticsController = new StatisticsController(this);
 		editController = new EditController(new EditView(), this);
 		quizController = new QuizController(new QuizSet(), this);
 		gameController = new GameController(new QuizSet(), this);
@@ -51,7 +51,7 @@ public class MainMenuController implements ActionListener {
 				gameController.startGame();
 				break;
 			case "START_QUIZ":
-				quizController.openQuiz();
+				quizController.startQuiz();
 				break;
 			case "EDIT_MODE":
 				editController.startEditor();
@@ -65,12 +65,11 @@ public class MainMenuController implements ActionListener {
 	}
 
 	private void updateMainMenuView() {
-		// Update the view with data from the UserInfo model
 		frame.setVisible(true);
 		frame.add(mainMenuView);
 
-		mainMenuView.setLevel(userInfo.getLevel());
-		mainMenuView.setPercentToNextLevel(userInfo.percentToNextLevel());
+		mainMenuView.setLevel(new UserInfo().getLevel());
+		mainMenuView.setPercentToNextLevel(new UserInfo().percentToNextLevel());
 	}
 
 
@@ -79,6 +78,7 @@ public class MainMenuController implements ActionListener {
 	}
 
 	public void showMainMenu() {
+		this.updateMainMenuView();
 		mainMenuView.setVisible(true);
 	}
 

@@ -3,6 +3,7 @@ package Controller;
 import Model.PictureQuestion;
 import Model.QuizQuestion;
 import Model.QuizSet;
+import Model.UserInfo;
 import View.GameView;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ public class GameController implements ActionListener {
 	private MainMenuController mainMenuController;
 	private QuizQuestion currentQuestion;
 	private int wrongAnswersCount = 0;
-	private final int MAX_WRONG = 6; // maximum allowed wrong answers / hangman steps
+	private final int MAX_WRONG = 6;
 
 	public GameController(QuizSet quizSet, MainMenuController mainMenuController) {
 		this.gameView = new GameView(this);
@@ -60,11 +61,12 @@ public class GameController implements ActionListener {
 			gameView.addHangmanStep();
 			if (wrongAnswersCount >= MAX_WRONG) {
 				// end of game
-				String feedback = "Game Over!\nDu hast " + quizSet.calculatePointsEarned() + " Fragen richtig beantwortet.\n";
+				String feedback = "Game Over!\nDu hast " + quizSet.calculateCorrectRounds() + " Fragen richtig beantwortet.\n";
 				gameView.setFeedbackMessage(feedback);
 				gameView.getInputField().setEnabled(false);
 				gameView.enableRestartQuizButton();
 				gameView.setOnlyQuestion("");
+				new UserInfo().addPoints(quizSet.calculatePointsEarnedInGame());
 				return;
 			}
 		}
@@ -73,16 +75,8 @@ public class GameController implements ActionListener {
 		gameView.setFocusToInput();
 	}
 
-	private boolean first = true;
 	private void loadNextQuestion() {
 		currentQuestion = quizSet.getRandomQuestionFromFile();
-
-		if(currentQuestion instanceof PictureQuestion && first) {
-			loadNextQuestion();
-			return;
-		}
-
-		first = false;
 
 		if (currentQuestion != null) {
 			if (currentQuestion instanceof PictureQuestion) {
@@ -102,15 +96,10 @@ public class GameController implements ActionListener {
 	}
 
 	public void startGame() {
+		restartQuiz();
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(gameView);
 		gameView.setVisible(true);
-		wrongAnswersCount = 0;
-		gameView.resetHangman();
-		gameView.resetNextButton();
-		gameView.clearInput();
-		gameView.clearFeedbackMessage();
-		gameView.setPictureURL(null);
 	}
 
 	public void exitGame() {
@@ -119,9 +108,15 @@ public class GameController implements ActionListener {
 	}
 
 	private void restartQuiz() {
-		gameView.setFeedbackMessage("");
-		gameView.getInputField().setEnabled(true);
-		startGame();
+		wrongAnswersCount = 0;
+		quizSet.clearHistory();
+
 		loadNextQuestion();
+
+		gameView.getInputField().setEnabled(true);
+		gameView.clearInput();
+		gameView.resetHangman();
+		gameView.resetNextButton();
+		gameView.clearFeedbackMessage();
 	}
 }

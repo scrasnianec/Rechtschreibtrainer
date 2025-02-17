@@ -19,7 +19,6 @@ public class MainMenuView extends JPanel {
 
 	public MainMenuView() {
 		FlatDarkLaf.setup();
-		setSize(500, 400);
 		initializeComponents();
 		layoutComponents();
 		setVisible(true);
