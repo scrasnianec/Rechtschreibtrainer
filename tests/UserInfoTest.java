@@ -6,7 +6,7 @@ import java.util.List;
 
 class UserInfoTest {
 
-    private static final String FILE_PATH = "./data/userInfo.ser";
+    private static final String FILE_PATH = UserInfo.FILE_PATH;
 
     @BeforeEach
     void setUp() {

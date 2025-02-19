@@ -1,12 +1,13 @@
 package Model;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuizReset {
     public static void resetQuizFile(){
-        String mockFilePath = "./data/questions_data.json";
+        String mockFilePath = DataPath.QUIZ_PATH;
 
         // Instanziiere SaveLoadQuizFile mit dem Pfad
         SaveLoadQuizFile saveLoadQuizFile = new SaveLoadQuizFile();

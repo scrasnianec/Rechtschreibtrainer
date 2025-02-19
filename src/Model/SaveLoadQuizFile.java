@@ -42,7 +42,7 @@ public class SaveLoadQuizFile {
 	public void saveQuestions(List<QuizQuestion> questionList) {
 		File file = new File(DataPath.QUIZ_PATH);
 		if(!file.exists()) {
-			if(file.mkdirs()){
+			if(file.getParentFile().mkdirs()){
 				System.out.println("Directory is created!");
 			}
 		}
