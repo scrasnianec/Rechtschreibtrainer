@@ -64,6 +64,7 @@ public class GameView extends JPanel {
 
         // Question label
         question = new JTextPane();
+        question.setFocusable(false);
         question.setEditable(false);
         question.setOpaque(false);
         question.setFont(new Font("Arial", Font.BOLD, 16));
@@ -75,6 +76,7 @@ public class GameView extends JPanel {
 
         // Feedback message label
         feedbackMessage = new JTextPane();
+        feedbackMessage.setFocusable(false);
         feedbackMessage.setEditable(false);
         feedbackMessage.setOpaque(false);
         feedbackMessage.setFont(new Font("Arial", Font.BOLD, 16));
