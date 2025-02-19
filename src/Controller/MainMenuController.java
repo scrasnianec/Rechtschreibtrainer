@@ -42,6 +42,13 @@ public class MainMenuController implements ActionListener {
 
 	}
 
+	public static void main(String[] args) {
+		Frame view = new Frame();
+		view.setSize(800, 600);
+
+		MainMenuController mainMenuController = new MainMenuController(view);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();

@@ -49,7 +49,6 @@ public class UserInfo implements Serializable {
 		this.totalPoints += points;
 		this.pointHistory.add(points); // Add to point history
 		saveUserInfo();
-		System.out.println(this.pointHistory.toString());
 	}
 
 	public int getTotalPoints() {
