@@ -5,10 +5,7 @@ import java.util.Arrays;
 public class MockUserInfoFileCreator {
 
     public static void main(String[] args) {
-        // Define the path for the mock UserInfo file
-        String mockFilePath = "./data/userInfo.ser";
-
-        // Create a mock UserInfo object
+        String mockFilePath = UserInfo.FILE_PATH;
         UserInfo mockUserInfo = new UserInfo();
 
         // Set mock data for the UserInfo object

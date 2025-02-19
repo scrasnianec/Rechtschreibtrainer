@@ -8,7 +8,7 @@ public class UserInfo implements Serializable {
 
 	private int totalPoints;
 	private List<Integer> pointHistory;
-	private static final String FILE_PATH = "./data/userInfo.ser";
+	public static final String FILE_PATH = "./resources/userInfo.ser";
 
 	public UserInfo() {
 		loadUserInfo();
@@ -33,7 +33,7 @@ public class UserInfo implements Serializable {
 	}
 
 	private void saveUserInfo() {
-		File dir = new File("./data");
+		File dir = new File("./resources");
 		if (!dir.exists()) {
 			dir.mkdirs(); // Create the directory if it doesn't exist
 		}
