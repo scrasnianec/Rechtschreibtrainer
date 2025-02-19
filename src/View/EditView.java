@@ -1,6 +1,8 @@
 package View;
 
 import Controller.EditController;
+import Model.CapitalizationQuestion;
+import Model.CompleteQuestion;
 import Model.QuizQuestion;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 public class EditView extends JPanel {
 
+	public static final String[] QUESTION_TYPES = {"Wortformen ergänzen", "Satz korrigieren", "Bild benennen", "S, SS oder ß"};
 	private JTextField inputAnswer;
 	private JTextField relatedWord;
 	private JTextField uncompleteWord;
@@ -45,7 +48,7 @@ public class EditView extends JPanel {
 		relatedWord = new JTextField(20);
 		uncompleteWord = new JTextField(20);
 		pictureURL = new JTextField(20);
-		questionType = new JComboBox<>(new String[]{"Completion", "Capitalization", "Picture", "SSharp"});
+		questionType = new JComboBox<>(QUESTION_TYPES);
 
 		// JList + scroll pane
 		questionListModel = new DefaultListModel<>();
@@ -54,11 +57,11 @@ public class EditView extends JPanel {
 		questionScrollPane = new JScrollPane(questionList);
 
 		exit = new JButton("Exit");
-		save = new JButton("Save Question");
-		newF = new JButton("New Question");
-		deleteQuestion = new JButton("Delete Question");
-		deleteAll = new JButton("Delete All Questions");
-		reset = new JButton("Reset File");
+		save = new JButton("Frage speichern");
+		newF = new JButton("Neue Frage");
+		deleteQuestion = new JButton("Frage löschen");
+		deleteAll = new JButton("Alle Fragen löschen");
+		reset = new JButton("Alle Fragen zurücksetzen");
 
 		exit.setActionCommand("EXIT");
 		save.setActionCommand("SAVE");
@@ -73,18 +76,18 @@ public class EditView extends JPanel {
 	private void layoutComponents() {
 		// Left panel: The list of loaded questions (scrollable)
 		JPanel listPanel = new JPanel(new BorderLayout());
-		listPanel.setBorder(BorderFactory.createTitledBorder("Loaded Questions"));
+		listPanel.setBorder(BorderFactory.createTitledBorder("Geladene Fragen"));
 		listPanel.add(questionScrollPane, BorderLayout.CENTER);
 
 		// Center panel: Fields for editing
 		JPanel fieldPanel = new JPanel(new GridLayout(5, 2, 5, 5));
 		fieldPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		fieldPanel.add(createLabeledComponent("Question Type:", questionType));
-		fieldPanel.add(createLabeledComponent("Answer Input:", inputAnswer));
-		fieldPanel.add(createLabeledComponent("Related Word:", relatedWord));
-		fieldPanel.add(createLabeledComponent("Uncomplete Word:", uncompleteWord));
-		fieldPanel.add(createLabeledComponent("Picture URL:", pictureURL));
+		fieldPanel.add(createLabeledComponent("Fragetyp:", questionType));
+		fieldPanel.add(createLabeledComponent("Antwort:", inputAnswer));
+		fieldPanel.add(createLabeledComponent("Verwandtes Wort:", relatedWord));
+		fieldPanel.add(createLabeledComponent("Unvollständiger Teil:", uncompleteWord));
+		fieldPanel.add(createLabeledComponent("URL von Bild:", pictureURL));
 
 		// Bottom panel: the buttons
 		JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
@@ -116,39 +119,20 @@ public class EditView extends JPanel {
 		this.allQuestions = questions;  // Keep reference locally
 		questionListModel.clear();
 		for (QuizQuestion qq : questions) {
-			questionListModel.addElement(qq.questionExplanation());
-		}
-	}
-
-	// Called by the controller whenever a question is selected
-	public void setQuestionFields(QuizQuestion question) {
-		if (question == null) {
-			// Clear the fields if no question
-			setAnswerInput("");
-			setRelatedWord("");
-			setUncompleteWord("");
-			setPictureURL("");
-			return;
-		}
-
-		// Populate fields
-		setAnswerInput(question.getAnswer());
-		// Depending on type, you can fill in the relevant field:
-		switch (question.getType()) {
-			case "CompleteQuestion":
-				// cast to your CompleteQuestion to get the uncompleteWord
-				break;
-			case "PictureQuestion":
-				// cast to PictureQuestion to get imageURL
-				break;
-			case "SSharpQuestion":
-				// cast to SSharpQuestion to get relatedWord
-				break;
-			case "CapitalizationQuestion":
-				// ...
-				break;
-			default:
-				// do nothing or handle error
+			String readableNames = "";
+			String type = qq.getType();
+			if (type.equals("CompleteQuestion")) {
+				readableNames = QUESTION_TYPES[0];
+			} else if (type.equals("CapitalizationQuestion")) {
+				readableNames = QUESTION_TYPES[1];
+			} else if (type.equals("PictureQuestion")) {
+				readableNames = QUESTION_TYPES[2];
+			} else if (type.equals("SSharpQuestion")) {
+				readableNames = QUESTION_TYPES[3];
+			} else {
+				readableNames = "Unknown";
+			}
+			questionListModel.addElement(readableNames);
 		}
 	}
 
@@ -160,23 +144,18 @@ public class EditView extends JPanel {
 		uncompleteWord.setEnabled(false);
 		pictureURL.setEnabled(false);
 
-		switch (selectedType) {
-			case "Completion":
-				inputAnswer.setEnabled(true);
-				uncompleteWord.setEnabled(true);
-				break;
-			case "Capitalization":
-				inputAnswer.setEnabled(true);
-				break;
-			case "Picture":
-				inputAnswer.setEnabled(true);
-				pictureURL.setEnabled(true);
-				break;
-			case "SSharp":
-				inputAnswer.setEnabled(true);
-				relatedWord.setEnabled(true);
-				break;
-		}
+        if (selectedType.equals(QUESTION_TYPES[0])) {
+            inputAnswer.setEnabled(true);
+            uncompleteWord.setEnabled(true);
+        } else if (selectedType.equals(QUESTION_TYPES[1])) {
+            inputAnswer.setEnabled(true);
+        } else if (selectedType.equals(QUESTION_TYPES[2])) {
+            inputAnswer.setEnabled(true);
+            pictureURL.setEnabled(true);
+        } else if (selectedType.equals(QUESTION_TYPES[3])) {
+            inputAnswer.setEnabled(true);
+            relatedWord.setEnabled(true);
+        }
 	}
 
 	// Basic getters for field content

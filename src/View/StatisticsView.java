@@ -24,12 +24,12 @@ public class StatisticsView extends JPanel {
 	private void initializeComponents() {
 		exit = new JButton("Exit");
 
-		averagePoints = new JLabel("Average Points per Challenge: 0", SwingConstants.CENTER);
-		maxPoints = new JLabel("Max Points for a Challenge: 0", SwingConstants.CENTER);
-		totalChallenges = new JLabel("Total Challenges: 0", SwingConstants.CENTER);
-		totalFailures = new JLabel("Total Failures: 0", SwingConstants.CENTER);
-		successRate = new JLabel("Success Rate: 0%", SwingConstants.CENTER);
-		winningStreak = new JLabel("Winning Streak: 0", SwingConstants.CENTER);
+		averagePoints = new JLabel("Durchschnittliche Punkte pro Herausforderung: 0", SwingConstants.CENTER);
+		maxPoints = new JLabel("Maximale Punkte für eine Herausforderung: 0", SwingConstants.CENTER);
+		totalChallenges = new JLabel("Gesamtanzahl an Herausforderungen: 0", SwingConstants.CENTER);
+		totalFailures = new JLabel("Gesamtanzahl an Fehlschlägen: 0", SwingConstants.CENTER);
+		successRate = new JLabel("Erfolgsquote: 0%", SwingConstants.CENTER);
+		winningStreak = new JLabel("Längste Siegesserie: 0", SwingConstants.CENTER);
 
 		// Styling components
 		Font labelFont = new Font("Arial", Font.BOLD, 14);
@@ -60,28 +60,28 @@ public class StatisticsView extends JPanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	public void setAveragePointsPerChallange(int points) {
-		averagePoints.setText("Average Points per Challenge: " + points);
+	public void setAveragePointsPerChallenge(int points) {
+		averagePoints.setText("Durchschnittliche Punkte pro Herausforderung: " + points);
 	}
 
-	public void setMaxPointsForChallange(int points) {
-		maxPoints.setText("Max Points for a Challenge: " + points);
+	public void setMaxPointsForChallenge(int points) {
+		maxPoints.setText("Maximale Punkte für eine Herausforderung: " + points);
 	}
 
-	public void setTotalChallangeCount(int count) {
-		totalChallenges.setText("Total Challenges: " + count);
+	public void setTotalChallengeCount(int count) {
+		totalChallenges.setText("Gesamtanzahl an Herausforderungen: " + count);
 	}
 
 	public void setTotalTimesFailed(int count) {
-		totalFailures.setText("Total Failures: " + count);
+		totalFailures.setText("Gesamtanzahl an Fails: " + count);
 	}
 
 	public void setSuccessRate(int rate) {
-		successRate.setText("Success Rate: " + rate + "%");
+		successRate.setText("Erfolgsquote: " + rate + "%");
 	}
 
 	public void setWinningStreak(int streak) {
-		winningStreak.setText("Winning Streak: " + streak);
+		winningStreak.setText("Längste Siegesserie: " + streak);
 	}
 
 	public JButton getExitButton() {

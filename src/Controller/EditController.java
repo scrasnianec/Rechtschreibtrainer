@@ -151,13 +151,13 @@ public class EditController implements ActionListener {
 	private String questionTypeToComboValue(String questionTypeName) {
 		switch (questionTypeName) {
 			case "CompleteQuestion":
-				return "Completion";
+				return EditView.QUESTION_TYPES[0];
 			case "CapitalizationQuestion":
-				return "Capitalization";
+				return EditView.QUESTION_TYPES[1];
 			case "PictureQuestion":
-				return "Picture";
+				return EditView.QUESTION_TYPES[2];
 			case "SSharpQuestion":
-				return "SSharp";
+				return EditView.QUESTION_TYPES[3];
 			default:
 				return "Completion"; // fallback
 		}
@@ -173,29 +173,24 @@ public class EditController implements ActionListener {
 	}
 
 	private void saveQuestion() {
-		String type = editView.getSelectedQuestionType();
+		String type = editView.getSelectedQuestionType(); //
 		String answer = editView.getAnswerInput();
 		String relatedWord = editView.getRelatedWord();
 		String uncompleteWord = editView.getUncompleteWord();
 		String pictureURL = editView.getPictureURL();
 
 		QuizQuestion question;
-		switch (type) {
-			case "Completion":
-				question = new CompleteQuestion(uncompleteWord, answer);
-				break;
-			case "Capitalization":
-				question = new CapitalizationQuestion(answer);
-				break;
-			case "Picture":
-				question = new PictureQuestion(pictureURL, answer);
-				break;
-			case "SSharp":
-				question = new SSharpQuestion(relatedWord, answer);
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown question type: " + type);
-		}
+        if (type.equals(EditView.QUESTION_TYPES[0])) {
+            question = new CompleteQuestion(uncompleteWord, answer);
+        } else if (type.equals(EditView.QUESTION_TYPES[1])) {
+            question = new CapitalizationQuestion(answer);
+        } else if (type.equals(EditView.QUESTION_TYPES[2])) {
+            question = new PictureQuestion(pictureURL, answer);
+        } else if (type.equals(EditView.QUESTION_TYPES[3])) {
+            question = new SSharpQuestion(relatedWord, answer);
+        } else {
+            throw new IllegalArgumentException("Unknown question type: " + type);
+        }
 
 		try {
 			List<QuizQuestion> questions = loadExistingQuestions();

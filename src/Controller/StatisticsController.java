@@ -39,9 +39,9 @@ public class StatisticsController implements ActionListener {
 
 	private void updateStatisticsView() {
 		userInfo = new UserInfo();
-		statisticsView.setAveragePointsPerChallange(calculateAveragePoints());
-		statisticsView.setMaxPointsForChallange(calculateMaxPoints());
-		statisticsView.setTotalChallangeCount(userInfo.getPointHistory().size());
+		statisticsView.setAveragePointsPerChallenge(calculateAveragePoints());
+		statisticsView.setMaxPointsForChallenge(calculateMaxPoints());
+		statisticsView.setTotalChallengeCount(userInfo.getPointHistory().size());
 		statisticsView.setTotalTimesFailed(calculateFailures());
 		statisticsView.setSuccessRate(calculateSuccessRate());
 		statisticsView.setWinningStreak(calculateWinningStreak());
