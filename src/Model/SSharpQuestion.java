@@ -29,4 +29,8 @@ public class SSharpQuestion extends QuizQuestion {
 	public String getAnswer() {
 		return correctAnswer;
 	}
+
+    public String getRelatedWord() {
+		return relatedWord;
+    }
 }

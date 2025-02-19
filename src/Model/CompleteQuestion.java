@@ -29,4 +29,8 @@ public class CompleteQuestion extends QuizQuestion {
 	public String getAnswer() {
 		return correctAnswer;
 	}
+
+    public String getUncompleteWord() {
+		return uncompleteWord;
+    }
 }

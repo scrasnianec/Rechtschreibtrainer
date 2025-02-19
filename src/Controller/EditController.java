@@ -92,17 +92,57 @@ public class EditController implements ActionListener {
 		}
 	}
 
-	private void loadQuestionIntoFields(QuizQuestion q) {
-		// Figure out the question type, set combobox, fill fields, and grey out unused
-		String type = q.getType();
+	private void loadQuestionIntoFields(QuizQuestion question) {
+		// Clear them all first
+		editView.setAnswerInput("");
+		editView.setRelatedWord("");
+		editView.setUncompleteWord("");
+		editView.setPictureURL("");
 
-		// Update the questionType combo box
+		if (question == null) {
+			return; // nothing to load
+		}
+
+		// Set the question type in the combo box so it matches the loaded question
+		String type = question.getType();
 		editView.questionType.setSelectedItem(questionTypeToComboValue(type));
 
-		// Now let the EditView fill and enable/disable fields as needed
-		editView.setQuestionFields(q);
+		// Fill in the general fields
+		editView.setAnswerInput(question.getAnswer());
+
+		// Now fill in *type-specific* fields by casting:
+		switch (type) {
+			case "CompleteQuestion":
+				// Cast so we can get the uncompleteWord:
+				CompleteQuestion cQuestion = (CompleteQuestion) question;
+				editView.setUncompleteWord(cQuestion.getUncompleteWord());
+				// The other fields (relatedWord, pictureURL) stay empty
+				break;
+
+			case "PictureQuestion":
+				// Cast so we can get the URL:
+				PictureQuestion pQuestion = (PictureQuestion) question;
+				editView.setPictureURL(pQuestion.getImageURL());
+				// The other fields stay empty
+				break;
+
+			case "SSharpQuestion":
+				// Cast so we can get the relatedWord, etc.:
+				SSharpQuestion sQuestion = (SSharpQuestion) question;
+				editView.setRelatedWord(sQuestion.getRelatedWord());
+				break;
+
+			case "CapitalizationQuestion":
+				// For Capitalization, it might only have an answer
+				// so nothing else needed, if that's how your class is defined:
+				// CapitalizationQuestion cap = (CapitalizationQuestion) question;
+				break;
+		}
+
+		// Finally, enable/disable fields:
 		editView.updateFieldVisibility(editView.getSelectedQuestionType());
 	}
+
 
 	/**
 	 * A small helper to map the getType() string to the item in the combo box.
