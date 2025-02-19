@@ -3,8 +3,7 @@ package Controller;
 import View.EditView;
 import Model.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,9 @@ public class EditController implements ActionListener {
 	private EditView editView;
 	private SaveLoadQuizFile saveLoad;
 	private MainMenuController mainMenuController;
+
+	// Keep the currently loaded questions so we can easily retrieve them by index
+	private List<QuizQuestion> currentQuestions = new ArrayList<>();
 
 	public EditController(EditView editView, MainMenuController mainMenuController) {
 		this.mainMenuController = mainMenuController;
@@ -27,6 +29,25 @@ public class EditController implements ActionListener {
 		editView.getResetButton().addActionListener(this);
 		editView.getDeleteQuestionButton().addActionListener(this);
 		editView.getDeleteAllButton().addActionListener(this);
+
+		// Listen for selections in the question list:
+		editView.getQuestionList().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				int idx = editView.getQuestionList().getSelectedIndex();
+				if (idx >= 0 && idx < currentQuestions.size()) {
+					QuizQuestion selectedQ = currentQuestions.get(idx);
+					loadQuestionIntoFields(selectedQ);
+				}
+			}
+		});
+
+		// Also listen for changes to questionType, so we can grey out unused fields:
+		editView.questionType.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				String newType = (String) e.getItem();
+				editView.updateFieldVisibility(newType);
+			}
+		});
 	}
 
 	@Override
@@ -35,13 +56,8 @@ public class EditController implements ActionListener {
 		switch (command) {
 			case "SAVE":
 				saveQuestion();
-				try {
-					List<QuizQuestion> questions = loadExistingQuestions();
-					editView.setLoadQuestions(questions);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(editView, "Error loading questions.", "Error", JOptionPane.ERROR_MESSAGE);
-				}				break;
+				reloadQuestions();
+				break;
 			case "NEW":
 				clearFields();
 				break;
@@ -50,16 +66,10 @@ public class EditController implements ActionListener {
 				break;
 			case "RESET":
 				QuizReset.resetQuizFile();
-				try {
-					List<QuizQuestion> questions = loadExistingQuestions();
-					editView.setLoadQuestions(questions);
-					JOptionPane.showMessageDialog(editView, "Quiz file reset successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(editView, "Error resetting quiz file.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				reloadQuestions();
+				JOptionPane.showMessageDialog(editView, "Quiz file reset successfully.",
+						"Success", JOptionPane.INFORMATION_MESSAGE);
 				break;
-
 			case "DELETE_QUESTION":
 				deleteSelectedQuestion();
 				break;
@@ -71,6 +81,57 @@ public class EditController implements ActionListener {
 		}
 	}
 
+	private void reloadQuestions() {
+		try {
+			currentQuestions = loadExistingQuestions();
+			editView.setLoadQuestions(currentQuestions);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(editView, "Error loading questions.",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void loadQuestionIntoFields(QuizQuestion q) {
+		// Figure out the question type, set combobox, fill fields, and grey out unused
+		String type = q.getType();
+
+		// Update the questionType combo box
+		editView.questionType.setSelectedItem(questionTypeToComboValue(type));
+
+		// Now let the EditView fill and enable/disable fields as needed
+		editView.setQuestionFields(q);
+		editView.updateFieldVisibility(editView.getSelectedQuestionType());
+	}
+
+	/**
+	 * A small helper to map the getType() string to the item in the combo box.
+	 * Example: "PictureQuestion" -> "Picture"
+	 */
+	private String questionTypeToComboValue(String questionTypeName) {
+		switch (questionTypeName) {
+			case "CompleteQuestion":
+				return "Completion";
+			case "CapitalizationQuestion":
+				return "Capitalization";
+			case "PictureQuestion":
+				return "Picture";
+			case "SSharpQuestion":
+				return "SSharp";
+			default:
+				return "Completion"; // fallback
+		}
+	}
+
+	private List<QuizQuestion> loadExistingQuestions() throws IOException {
+		List<QuizQuestion> questions = saveLoad.loadQuestions();
+		return (questions != null) ? questions : new ArrayList<>();
+	}
+
+	private void saveQuestionsToFile(List<QuizQuestion> questions) throws IOException {
+		saveLoad.saveQuestions(questions);
+	}
+
 	private void saveQuestion() {
 		String type = editView.getSelectedQuestionType();
 		String answer = editView.getAnswerInput();
@@ -78,7 +139,7 @@ public class EditController implements ActionListener {
 		String uncompleteWord = editView.getUncompleteWord();
 		String pictureURL = editView.getPictureURL();
 
-		QuizQuestion question = null;
+		QuizQuestion question;
 		switch (type) {
 			case "Completion":
 				question = new CompleteQuestion(uncompleteWord, answer);
@@ -100,35 +161,34 @@ public class EditController implements ActionListener {
 			List<QuizQuestion> questions = loadExistingQuestions();
 			questions.add(question);
 			saveQuestionsToFile(questions);
-			JOptionPane.showMessageDialog(editView, "Question saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(editView, "Question saved successfully!",
+					"Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(editView, "Error saving question.", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(editView, "Error saving question.",
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
 	private void deleteSelectedQuestion() {
-		int selectedIndex = editView.getLoadQuestionComboBox().getSelectedIndex();
+		int selectedIndex = editView.getQuestionList().getSelectedIndex();
 		if (selectedIndex < 0) {
-			JOptionPane.showMessageDialog(editView, "No question selected for deletion.", "Warning", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(editView, "No question selected for deletion.",
+					"Warning", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
 		try {
 			List<QuizQuestion> questions = loadExistingQuestions();
-			questions.remove(selectedIndex); // Remove the selected question
-			saveQuestionsToFile(questions); // Save updated list to file
-			editView.setLoadQuestions(questions); // Refresh UI
-			JOptionPane.showMessageDialog(editView, "Question deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+			questions.remove(selectedIndex); // remove the selected question
+			saveQuestionsToFile(questions);
+			reloadQuestions();
+			JOptionPane.showMessageDialog(editView, "Question deleted successfully.",
+					"Success", JOptionPane.INFORMATION_MESSAGE);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(editView, "Error deleting question.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		try {
-			List<QuizQuestion> questions = loadExistingQuestions();
-			editView.setLoadQuestions(questions);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+			JOptionPane.showMessageDialog(editView, "Error deleting question.",
+					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -141,30 +201,17 @@ public class EditController implements ActionListener {
 		);
 		if (confirmation == JOptionPane.YES_OPTION) {
 			try {
-				List<QuizQuestion> questions = new ArrayList<>();
-				saveQuestionsToFile(questions); // Save empty list to file
-				editView.setLoadQuestions(questions); // Refresh UI
-				JOptionPane.showMessageDialog(editView, "All questions deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+				List<QuizQuestion> emptyList = new ArrayList<>();
+				saveQuestionsToFile(emptyList);
+				reloadQuestions();
+				JOptionPane.showMessageDialog(editView, "All questions deleted successfully.",
+						"Success", JOptionPane.INFORMATION_MESSAGE);
 			} catch (IOException ex) {
 				ex.printStackTrace();
-				JOptionPane.showMessageDialog(editView, "Error deleting all questions.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(editView, "Error deleting all questions.",
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		try {
-			List<QuizQuestion> questions = loadExistingQuestions();
-			editView.setLoadQuestions(questions);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	private List<QuizQuestion> loadExistingQuestions() throws IOException {
-		List<QuizQuestion> questions = saveLoad.loadQuestions();
-		return (questions != null) ? questions : new ArrayList<>();
-	}
-
-	private void saveQuestionsToFile(List<QuizQuestion> questions) throws IOException {
-		saveLoad.saveQuestions(questions);
 	}
 
 	private void clearFields() {
@@ -172,20 +219,21 @@ public class EditController implements ActionListener {
 		editView.setRelatedWord("");
 		editView.setUncompleteWord("");
 		editView.setPictureURL("");
-		JOptionPane.showMessageDialog(editView, "Fields cleared for a new question.", "Info", JOptionPane.INFORMATION_MESSAGE);
+		// Optionally reset the questionType combo
+		editView.questionType.setSelectedIndex(0);
+		// and update field visibility
+		editView.updateFieldVisibility(editView.getSelectedQuestionType());
+		JOptionPane.showMessageDialog(editView, "Fields cleared for a new question.",
+				"Info", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void startEditor() {
 		mainMenuController.hideMainMenu();
 		mainMenuController.addPanel(editView);
 		editView.setVisible(true);
-		try {
-			List<QuizQuestion> questions = loadExistingQuestions();
-			editView.setLoadQuestions(questions);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(editView, "Error loading questions.", "Error", JOptionPane.ERROR_MESSAGE);
-		}
+		reloadQuestions();
+		// Make sure fields are greyed out (initially)
+		editView.updateFieldVisibility(editView.getSelectedQuestionType());
 	}
 
 	public void stopEditor() {
